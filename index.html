@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<!-- saved from url=(0303)file:///C:/Users/kim11/AppData/Local/Packages/Claude_pzs8sxrjxfjjc/LocalCache/Roaming/Claude/local-agent-mode-sessions/8d92713f-db5f-44b4-858d-cd5377bf512e/b9257b3f-d036-44f3-9531-d9e4045d54d5/local_d0ce4429-4922-43bb-8dc5-621a085a676d/outputs/%EC%9E%AC%EA%B3%A0%EA%B4%80%EB%A6%AC%EB%B3%B4%EB%93%9C.html -->
+<html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>재고 관리 보드</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #f4f6f9; --card: #fff; --line: #e3e7ee; --text: #1f2733;
+    --muted: #75808f; --accent: #2f6df6; --accent-d: #1f57d6;
+    --green: #1aa463; --green-bg: #e7f7ef; --red: #e0463c; --red-bg: #fdeceb;
+    --amber: #d98a00; --amber-bg: #fff5e0; --shadow: 0 1px 3px rgba(20,30,50,.08);
+  }
+  body { font-family: -apple-system, "Segoe UI", "Malgun Gothic", sans-serif;
+    background: var(--bg); color: var(--text); padding: 24px; line-height: 1.5; }
+  .wrap { max-width: 1240px; margin: 0 auto; }
+  header { display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
+  h1 { font-size: 22px; font-weight: 700; }
+  .sub { color: var(--muted); font-size: 13px; margin-top: 2px; }
+  .toolbar { display: flex; gap: 8px; flex-wrap: wrap; }
+  button { font: inherit; cursor: pointer; border: none; border-radius: 8px;
+    padding: 9px 14px; font-size: 14px; font-weight: 600; transition: .15s; }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: var(--accent-d); }
+  .btn-ghost { background: var(--card); color: var(--text); border: 1px solid var(--line); }
+  .btn-ghost:hover { background: #f0f3f8; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 14px; margin-bottom: 20px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    padding: 16px 18px; box-shadow: var(--shadow); }
+  .card .label { font-size: 13px; color: var(--muted); }
+  .card .value { font-size: 26px; font-weight: 700; margin-top: 4px; }
+  .card .value.sm { font-size: 18px; }
+  .card.warn .value { color: var(--red); }
+  .controls { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+  input, select { font: inherit; padding: 9px 11px; border: 1px solid var(--line);
+    border-radius: 8px; background: #fff; color: var(--text); }
+  input:focus, select:focus { outline: none; border-color: var(--accent); }
+  #search { flex: 1; min-width: 200px; }
+  .panel { background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    box-shadow: var(--shadow); overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { padding: 12px 14px; text-align: left; font-size: 14px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  th { background: #fafbfd; font-size: 12px; color: var(--muted); font-weight: 600;
+    text-transform: uppercase; letter-spacing: .03em; cursor: pointer; user-select: none; }
+  th.num, td.num { text-align: right; }
+  tbody tr:hover { background: #f8fafd; }
+  tbody tr:last-child td { border-bottom: none; }
+  .pill { display: inline-block; padding: 3px 9px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+  .pill.ok { background: var(--green-bg); color: var(--green); }
+  .pill.low { background: var(--amber-bg); color: var(--amber); }
+  .pill.out { background: var(--red-bg); color: var(--red); }
+  .cat-tag { background: #eef1f6; color: var(--muted); padding: 2px 8px; border-radius: 6px; font-size: 12px; }
+  .brand-tag { display: inline-block; padding: 2px 9px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+  .b-mylabs { background: #e6efff; color: #1f57d6; }
+  .b-ydy { background: #f1e9fc; color: #7a3fc7; }
+  .b-none { background: #f0f2f5; color: #9aa3af; }
+  .row-actions { display: flex; gap: 6px; }
+  .icon-btn { background: none; border: 1px solid var(--line); border-radius: 6px;
+    padding: 5px 9px; font-size: 13px; color: var(--muted); }
+  .icon-btn:hover { background: #f0f3f8; color: var(--text); }
+  .icon-btn.in:hover { color: var(--green); border-color: var(--green); }
+  .icon-btn.out:hover { color: var(--red); border-color: var(--red); }
+  .empty { padding: 48px; text-align: center; color: var(--muted); }
+  .overlay { position: fixed; inset: 0; background: rgba(20,28,42,.45);
+    display: none; align-items: center; justify-content: center; padding: 20px; z-index: 50; }
+  .overlay.show { display: flex; }
+  .modal { background: var(--card); border-radius: 14px; width: 100%; max-width: 440px;
+    padding: 24px; box-shadow: 0 12px 40px rgba(20,30,50,.25); }
+  .modal h2 { font-size: 18px; margin-bottom: 16px; }
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 5px; }
+  .field input, .field select { width: 100%; }
+  .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
+  .qty-big { font-size: 15px; }
+  .modal-lg { max-width: 780px; }
+  .hist-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .hist-head h2 { margin: 0; }
+  .hist-scroll { max-height: 56vh; overflow-y: auto; border: 1px solid var(--line); border-radius: 10px; }
+  .hist-table { width: 100%; border-collapse: collapse; }
+  .hist-table th, .hist-table td { padding: 9px 12px; font-size: 13px; border-bottom: 1px solid var(--line); text-align: left; }
+  .hist-table th { position: sticky; top: 0; background: #fafbfd; font-size: 11px; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .03em; }
+  .hist-table th.num, .hist-table td.num { text-align: right; }
+  .hist-table tbody tr:last-child td { border-bottom: none; }
+  .move-in { color: var(--green); font-weight: 600; }
+  .move-out { color: var(--red); font-weight: 600; }
+  .del-x { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 14px; }
+  .del-x:hover { color: var(--red); }
+  footer { text-align: center; color: var(--muted); font-size: 12px; margin-top: 24px; }
+  @media (max-width: 640px) { body { padding: 14px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>📦 재고 관리 보드</h1>
+      <div class="sub">입고·출고를 입력하면 현재 재고가 자동으로 계산됩니다 · 🔵 Mylabs / 🟣 YDY 구분</div>
+    </div>
+    <div class="toolbar">
+      <button class="btn-ghost" onclick="openHistory()">📜 입출고 이력</button>
+      <button class="btn-ghost" onclick="exportCSV()">CSV 내보내기</button>
+      <button class="btn-ghost" onclick="document.getElementById(&#39;salesFile&#39;).click()">📥 판매 반영</button>
+      <button class="btn-primary" onclick="openItemModal()">+ 품목 추가</button>
+      <input type="file" id="salesFile" accept=".xlsx,.xls,.csv" style="display:none" onchange="handleSalesFile(this)">
+    </div>
+  </header>
+
+  <div class="cards">
+    <div class="card"><div class="label">총 품목 수</div><div class="value" id="statItems">9</div></div>
+    <div class="card"><div class="label">총 재고 수량</div><div class="value" id="statQty">62,691</div></div>
+    <div class="card"><div class="label">총 재고 금액 (원가 $)</div><div class="value" id="statValue">$750,135.02</div></div>
+    <div class="card warn"><div class="label">재고 부족 품목</div><div class="value" id="statLow">1</div></div>
+    <div class="card"><div class="label">🔵 Mylabs</div><div class="value sm" id="statMylabs">3종 · 12,342개</div></div>
+    <div class="card"><div class="label">🟣 YDY</div><div class="value sm" id="statYdy">6종 · 50,349개</div></div>
+  </div>
+
+  <div class="controls">
+    <input id="search" placeholder="🔍 품목명 · SKU 검색" oninput="render()">
+    <select id="brandFilter" onchange="render()">
+      <option value="">전체 브랜드</option>
+      <option value="Mylabs">🔵 Mylabs</option>
+      <option value="YDY">🟣 YDY</option>
+      <option value="__none__">미지정</option>
+    </select>
+    <select id="catFilter" onchange="render()"><option value="">전체 분류</option><option>Supplement</option></select>
+    <select id="statusFilter" onchange="render()">
+      <option value="">전체 상태</option>
+      <option value="ok">정상</option>
+      <option value="low">부족</option>
+      <option value="out">품절</option>
+    </select>
+  </div>
+
+  <div class="panel">
+    <table>
+      <thead>
+        <tr>
+          <th onclick="sortBy(&#39;name&#39;)">품목명</th>
+          <th onclick="sortBy(&#39;brand&#39;)">브랜드</th>
+          <th onclick="sortBy(&#39;sku&#39;)">SKU</th>
+          <th class="num" onclick="sortBy(&#39;stock&#39;)">현재고</th>
+          <th class="num" onclick="sortBy(&#39;safety&#39;)">안전재고</th>
+          <th class="num" onclick="sortBy(&#39;cost&#39;)">원가($)</th>
+          <th class="num" onclick="sortBy(&#39;price&#39;)">판매가</th>
+          <th class="num" onclick="sortBy(&#39;value&#39;)">재고금액($)</th>
+          <th>상태</th>
+          <th>입출고</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="tbody"><tr>
+      <td><b>Berberine Alpha</b></td>
+      <td><span class="brand-tag b-mylabs">🔵 Mylabs</span></td>
+      <td>MY-BERB-ALPHA</td>
+      <td class="num"><b>4,671</b></td>
+      <td class="num">0</td>
+      <td class="num">$8.46</td>
+      <td class="num">-</td>
+      <td class="num">$39,516.66</td>
+      <td><span class="pill ok">정상</span></td>
+      <td><div class="row-actions">
+        <button class="icon-btn in" title="입고" onclick="openMove(&#39;zxn6yfd&#39;,1)">▲ 입고</button>
+        <button class="icon-btn out" title="출고" onclick="openMove(&#39;zxn6yfd&#39;,-1)">▼ 출고</button>
+      </div></td>
+      <td><div class="row-actions">
+        <button class="icon-btn" title="이력" onclick="openHistory(&#39;zxn6yfd&#39;)">📜</button>
+        <button class="icon-btn" title="수정" onclick="openItemModal(&#39;zxn6yfd&#39;)">✏️</button>
+        <button class="icon-btn" title="삭제" onclick="delItem(&#39;zxn6yfd&#39;)">🗑️</button>
+      </div></td>
+    </tr><tr>
+      <td><b>Berberine MS</b></td>
+      <td><span class="brand-tag b-mylabs">🔵 Mylabs</span></td>
+      <td>MY-BERB-MS</td>
+      <td class="num"><b>0</b></td>
+      <td class="num">0</td>
+      <td class="num">$5.23</td>
+      <td class="num">-</td>
+      <td class="num">-</td>
+      <td><span class="pill out">품절</span></td>
+      <td><div class="row-actions">
+        <button class="icon-btn in" title="입고" onclick="openMove(&#39;qrrjkzt&#39;,1)">▲ 입고</button>
+        <button class="icon-btn out" title="출고" onclick="openMove(&#39;qrrjkzt&#39;,-1)">▼ 출고</button>
+      </div></td>
+      <td><div class="row-actions">
+        <button class="icon-btn" title="이력" onclick="openHistory(&#39;qrrjkzt&#39;)">📜</button>
+        <button class="icon-btn" title="수정" onclick="openItemModal(&#39;qrrjkzt&#39;)">✏️</button>
+        <button class="icon-btn" title="삭제" onclick="delItem(&#39;qrrjkzt&#39;)">🗑️</button>
+      </div></td>
+    </tr><tr>
+      <td><b>VS Formula Prime</b></td>
+      <td><span class="brand-tag b-mylabs">🔵 Mylabs</span></td>
+      <td>MY-VS-PRIME</td>
+      <td class="num"><b>7,671</b></td>
+      <td class="num">0</td>
+      <td class="num">$5.19</td>
+      <td class="num">-</td>
+      <td class="num">$39,812.49</td>
+      <td><span class="pill ok">정상</span></td>
+      <td><div class="row-actions">
+        <button class="icon-btn in" title="입고" onclick="openMove(&#39;24cbj1q&#39;,1)">▲ 입고</button>
+        <button class="icon-btn out" title="출고" onclick="openMove(&#39;24cbj1q&#39;,-1)">▼ 출고</button>
+      </div></td>
+      <td><div class="row-actions">
+        <button class="icon-btn" title="이력" onclick="openHistory(&#39;24cbj1q&#39;)">📜</button>
+        <button class="icon-btn" title="수정" onclick="openItemModal(&#39;24cbj1q&#39;)">✏️</button>
+        <button class="icon-btn" title="삭제" onclick="delItem(&#39;24cbj1q&#39;)">🗑️</button>
+      </div></td>
+    </tr><tr>
+      <td><b>All Active BQ10 with Quatrefolic®</b></td>
+      <td><span class="brand-tag b-ydy">🟣 YDY</span></td>
+      <td>YDY-BQ10</td>
+      <td class="num"><b>32</b></td>
+      <td class="num">0</td>
+      <td class="num">$16.49</td>
+      <td class="num">-</td>
+      <td class="num">$527.68</td>
+      <td><span class="pill ok">정상</span></td>
+      <td><div class="row-actions">
+        <button class="icon-btn in" title="입고" onclick="openMove(&#39;aiex4zw&#39;,1)">▲ 입고</button>
+        <button class="icon-btn out" title="출고" onclick="openMove(&#39;aiex4zw&#39;,-1)">▼ 출고</button>
+      </div></td>
+      <td><div class="row-actions">
+        <button class="icon-btn" title="이력" onclick="openHistory(&#39;aiex4zw&#39;)">📜</button>
+        <button class="icon-btn" title="수정" onclick="openItemModal(&#39;aiex4zw&#39;)">✏️</button>
+        <button class="icon-btn" title="삭제" onclick="delItem(&#39;aiex4zw&#39;)">🗑️</button>
+      </div></td>
+    </tr><tr>
+      <td><b>Berberine Phytosome with R-lipoic Acid</b></td>
+      <td><span class="brand-tag b-ydy">🟣 YDY</span></td>
+      <td>YDY-PHYTOSOME</td>
+      <td class="num"><b>17,613</b></td>
+      <td class="num">0</td>
+      <td class="num">$15.99</td>
+      <td class="num">-</td>
+      <td class="num">$281,631.87</td>
+      <td><span class="pill ok">정상</span></td>
+      <td><div class="row-actions">
+        <button class="icon-btn in" title="입고" onclick="openMove(&#39;4xqs9kf&#39;,1)">▲ 입고</button>
+        <button class="icon-btn out" title="출고" onclick="openMove(&#39;4xqs9kf&#39;,-1)">▼ 출고</button>
+      </div></td>
+      <td><div class="row-actions">
+        <button class="icon-btn" title="이력" onclick="openHistory(&#39;4xqs9kf&#39;)">📜</button>
+        <button class="icon-btn" title="수정" onclick="openItemModal(&#39;4xqs9kf&#39;)">✏️</button>
+        <button class="icon-btn" title="삭제" onclick="delItem(&#39;4xqs9kf&#39;)">🗑️</button>
+      </div></td>
+    </tr><tr>
+      <td><b>Chelated Magnesium with K2</b></td>
+      <td><span class="brand-tag b-ydy">🟣 YDY</span></td>
+      <td>YDY-MAGDUO-K2</td>
+      <td class="num"><b>9,965</b></td>
+      <td class="num">0</td>
+      <td class="num">$9.99</td>
+      <td class="num">-</td>
+      <td class="num">$99,550.35</td>
+      <td><span class="pill ok">정상</span></td>
+      <td><div class="row-actions">
+        <button class="icon-btn in" title="입고" onclick="openMove(&#39;cpvpxmv&#39;,1)">▲ 입고</button>
+        <button class="icon-btn out" title="출고" onclick="openMove(&#39;cpvpxmv&#39;,-1)">▼ 출고</button>
+      </div></td>
+      <td><div class="row-actions">
+        <button class="icon-btn" title="이력" onclick="openHistory(&#39;cpvpxmv&#39;)">📜</button>
+        <button class="icon-btn" title="수정" onclick="openItemModal(&#39;cpvpxmv&#39;)">✏️</button>
+        <button class="icon-btn" title="삭제" onclick="delItem(&#39;cpvpxmv&#39;)">🗑️</button>
+      </div></td>
+    </tr><tr>
+      <td><b>Circu-Pycnogenol®</b></td>
+      <td><span class="brand-tag b-ydy">🟣 YDY</span></td>
+      <td>YDY-CIRCU</td>
+      <td class="num"><b>6,357</b></td>
+      <td class="num">0</td>
+      <td class="num">$22.99</td>
+      <td class="num">-</td>
+      <td class="num">$146,147.43</td>
+      <td><span class="pill ok">정상</span></td>
+      <td><div class="row-actions">
+        <button class="icon-btn in" title="입고" onclick="openMove(&#39;3wj5274&#39;,1)">▲ 입고</button>
+        <button class="icon-btn out" title="출고" onclick="openMove(&#39;3wj5274&#39;,-1)">▼ 출고</button>
+      </div></td>
+      <td><div class="row-actions">
+        <button class="icon-btn" title="이력" onclick="openHistory(&#39;3wj5274&#39;)">📜</button>
+        <button class="icon-btn" title="수정" onclick="openItemModal(&#39;3wj5274&#39;)">✏️</button>
+        <button class="icon-btn" title="삭제" onclick="delItem(&#39;3wj5274&#39;)">🗑️</button>
+      </div></td>
+    </tr><tr>
+      <td><b>Liver-Dex</b></td>
+      <td><span class="brand-tag b-ydy">🟣 YDY</span></td>
+      <td>YDY-LIVER-DEX</td>
+      <td class="num"><b>8,436</b></td>
+      <td class="num">0</td>
+      <td class="num">-</td>
+      <td class="num">-</td>
+      <td class="num">-</td>
+      <td><span class="pill ok">정상</span></td>
+      <td><div class="row-actions">
+        <button class="icon-btn in" title="입고" onclick="openMove(&#39;3ssijks&#39;,1)">▲ 입고</button>
+        <button class="icon-btn out" title="출고" onclick="openMove(&#39;3ssijks&#39;,-1)">▼ 출고</button>
+      </div></td>
+      <td><div class="row-actions">
+        <button class="icon-btn" title="이력" onclick="openHistory(&#39;3ssijks&#39;)">📜</button>
+        <button class="icon-btn" title="수정" onclick="openItemModal(&#39;3ssijks&#39;)">✏️</button>
+        <button class="icon-btn" title="삭제" onclick="delItem(&#39;3ssijks&#39;)">🗑️</button>
+      </div></td>
+    </tr><tr>
+      <td><b>NAD+ Tri-complex</b></td>
+      <td><span class="brand-tag b-ydy">🟣 YDY</span></td>
+      <td>YDY-NAD</td>
+      <td class="num"><b>7,946</b></td>
+      <td class="num">0</td>
+      <td class="num">$17.99</td>
+      <td class="num">-</td>
+      <td class="num">$142,948.54</td>
+      <td><span class="pill ok">정상</span></td>
+      <td><div class="row-actions">
+        <button class="icon-btn in" title="입고" onclick="openMove(&#39;sqec23c&#39;,1)">▲ 입고</button>
+        <button class="icon-btn out" title="출고" onclick="openMove(&#39;sqec23c&#39;,-1)">▼ 출고</button>
+      </div></td>
+      <td><div class="row-actions">
+        <button class="icon-btn" title="이력" onclick="openHistory(&#39;sqec23c&#39;)">📜</button>
+        <button class="icon-btn" title="수정" onclick="openItemModal(&#39;sqec23c&#39;)">✏️</button>
+        <button class="icon-btn" title="삭제" onclick="delItem(&#39;sqec23c&#39;)">🗑️</button>
+      </div></td>
+    </tr></tbody>
+    </table>
+    <div class="empty" id="empty" style="display:none">품목이 없습니다. <b>+ 품목 추가</b>로 시작하세요.</div>
+  </div>
+
+  <footer>데이터는 이 브라우저에 자동 저장됩니다 · 백업은 CSV 내보내기를 활용하세요</footer>
+</div>
+
+<!-- 품목 추가/수정 모달 -->
+<div class="overlay" id="itemModal">
+  <div class="modal">
+    <h2 id="itemModalTitle">품목 추가</h2>
+    <div class="field"><label>품목명 *</label><input id="f_name" placeholder="예: Liver-Dex"></div>
+    <div class="field"><label>브랜드</label>
+      <select id="f_brand"><option value="">미지정</option><option value="Mylabs">🔵 Mylabs</option><option value="YDY">🟣 YDY</option></select></div>
+    <div class="field"><label>SKU / 코드</label><input id="f_sku" placeholder="예: LIVER-DEX"></div>
+    <div class="field"><label>분류</label><input id="f_category" list="catList" placeholder="예: Supplement">
+      <datalist id="catList"><option value="Supplement"></option></datalist></div>
+    <div class="field"><label>현재 재고 수량</label><input id="f_stock" type="number" min="0" value="0"></div>
+    <div class="field"><label>안전재고 (이하면 부족 경고)</label><input id="f_safety" type="number" min="0" value="0"></div>
+    <div class="field"><label>원가 (USD $)</label><input id="f_cost" type="number" min="0" step="0.01" value="0"></div>
+    <div class="field"><label>판매가 (₩)</label><input id="f_price" type="number" min="0" value="0"></div>
+    <div class="modal-actions">
+      <button class="btn-ghost" onclick="closeModal(&#39;itemModal&#39;)">취소</button>
+      <button class="btn-primary" onclick="saveItem()">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- 입출고 모달 -->
+<div class="overlay" id="moveModal">
+  <div class="modal">
+    <h2 id="moveModalTitle">입출고</h2>
+    <div class="field"><label id="moveItemLabel"></label>
+      <input id="m_qty" type="number" min="1" value="1" class="qty-big" placeholder="수량"></div>
+    <div class="field"><label>메모 (선택) — 거래처, 사유 등</label>
+      <input id="m_memo" placeholder="예: iHerb 발주 / 반품"></div>
+    <div class="modal-actions">
+      <button class="btn-ghost" onclick="closeModal(&#39;moveModal&#39;)">취소</button>
+      <button class="btn-primary" onclick="confirmMove()">확인</button>
+    </div>
+  </div>
+</div>
+
+<!-- 입출고 이력 모달 -->
+<div class="overlay" id="histModal">
+  <div class="modal modal-lg">
+    <div class="hist-head">
+      <h2 id="histTitle">입출고 이력</h2>
+      <button class="btn-ghost" onclick="exportHistoryCSV()">CSV</button>
+    </div>
+    <div class="hist-scroll">
+      <table class="hist-table">
+        <thead><tr>
+          <th>일시</th><th>품목</th><th>구분</th><th class="num">수량</th>
+          <th class="num">변동 후</th><th>메모</th><th></th>
+        </tr></thead>
+        <tbody id="histBody"></tbody>
+      </table>
+      <div class="empty" id="histEmpty" style="display:none">기록된 입출고 이력이 없습니다.</div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-ghost" onclick="closeModal(&#39;histModal&#39;)">닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- 판매 반영 미리보기 모달 -->
+<div class="overlay" id="salesModal">
+  <div class="modal modal-lg">
+    <h2 id="salesTitle">스마트스토어 판매 반영</h2>
+    <div id="salesSummary" style="font-size:13px;color:var(--muted);margin-bottom:12px;"></div>
+    <div class="hist-scroll">
+      <table class="hist-table">
+        <thead><tr><th>제품</th><th>브랜드</th><th class="num">신규 주문</th><th class="num">차감 병수</th><th class="num">현재고</th><th class="num">반영 후</th></tr></thead>
+        <tbody id="salesBody"></tbody>
+      </table>
+      <div class="empty" id="salesEmpty" style="display:none">새로 반영할 판매 건이 없습니다.</div>
+    </div>
+    <div id="salesWarn" style="font-size:12.5px;color:var(--amber);margin-top:10px;"></div>
+    <div class="modal-actions">
+      <button class="btn-ghost" onclick="closeModal(&#39;salesModal&#39;)">취소</button>
+      <button class="btn-primary" id="salesApplyBtn" onclick="applySales()">출고 반영</button>
+    </div>
+  </div>
+</div>
+
+<script src="./재고 관리 보드_files/xlsx.full.min.js.download"></script>
+<script>
+const KEY = 'inventory_board_v5';
+const HKEY = 'inventory_history_v1';
+const AKEY = 'inventory_applied_orders_v1';
+let items = [];
+let history = [];
+let applied = {};      // 이미 반영한 상품주문번호 { orderId: true }
+let pendingSales = null; // 미리보기 대기중인 판매 반영 데이터
+let sort = { col: 'name', dir: 1 };
+let editId = null, moveId = null, moveDir = 1, histFilterId = null;
+
+function load() {
+  try { items = JSON.parse(localStorage.getItem(KEY)) || []; } catch(e){ items = []; }
+  try { history = JSON.parse(localStorage.getItem(HKEY)) || []; } catch(e){ history = []; }
+  try { applied = JSON.parse(localStorage.getItem(AKEY)) || {}; } catch(e){ applied = {}; }
+  if (items.length === 0) seed();
+}
+function save() { localStorage.setItem(KEY, JSON.stringify(items)); }
+function saveHistory() { localStorage.setItem(HKEY, JSON.stringify(history)); }
+function saveApplied() { localStorage.setItem(AKEY, JSON.stringify(applied)); }
+function seed() {
+  // 원가 = COST_TABLE 단위원가(USD), 제품 원가만 (배송비 제외)
+  const P = (name, sku, brand, stock, cost) => ({ id: uid(), name, sku, brand, category: 'Supplement', stock, safety: 0, price: 0, cost });
+  items = [
+    P('Berberine Phytosome with R-lipoic Acid', 'YDY-PHYTOSOME', 'YDY', 17613, 15.99),
+    P('All Active BQ10 with Quatrefolic®', 'YDY-BQ10', 'YDY', 32, 16.49),
+    P('Chelated Magnesium with K2', 'YDY-MAGDUO-K2', 'YDY', 9965, 9.99),
+    P('NAD+ Tri-complex', 'YDY-NAD', 'YDY', 7946, 17.99),
+    P('Circu-Pycnogenol®', 'YDY-CIRCU', 'YDY', 6357, 22.99),
+    P('Liver-Dex', 'YDY-LIVER-DEX', 'YDY', 8436, 0),
+    P('Berberine Alpha', 'MY-BERB-ALPHA', 'Mylabs', 4671, 8.46),
+    P('Berberine MS', 'MY-BERB-MS', 'Mylabs', 0, 5.23),
+    P('VS Formula Prime', 'MY-VS-PRIME', 'Mylabs', 7671, 5.19),
+  ];
+  save();
+}
+function uid() { return Math.random().toString(36).slice(2, 9); }
+function won(n) { return '₩' + Math.round(n).toLocaleString('ko-KR'); }
+function usd(n) { return '$' + n.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}); }
+function statusOf(it) {
+  if (it.stock <= 0) return 'out';
+  if (it.stock <= it.safety) return 'low';
+  return 'ok';
+}
+const statusMeta = { ok: ['정상','ok'], low: ['부족','low'], out: ['품절','out'] };
+const brandMeta = { Mylabs: ['🔵 Mylabs','b-mylabs'], YDY: ['🟣 YDY','b-ydy'] };
+function brandTag(b) {
+  if (brandMeta[b]) return `<span class="brand-tag ${brandMeta[b][1]}">${brandMeta[b][0]}</span>`;
+  return `<span class="brand-tag b-none">미지정</span>`;
+}
+
+function render() {
+  const q = document.getElementById('search').value.trim().toLowerCase();
+  const bf = document.getElementById('brandFilter').value;
+  const cf = document.getElementById('catFilter').value;
+  const sf = document.getElementById('statusFilter').value;
+  let list = items.filter(it => {
+    const m = (it.name + ' ' + it.sku).toLowerCase().includes(q);
+    const br = !bf || (bf === '__none__' ? !it.brand : it.brand === bf);
+    const c = !cf || it.category === cf;
+    const s = !sf || statusOf(it) === sf;
+    return m && br && c && s;
+  });
+  const brandRank = x => x==='Mylabs' ? 0 : x==='YDY' ? 1 : 2;
+  list.sort((a, b) => {
+    // 전체 브랜드 보기일 때는 브랜드(Mylabs → YDY → 미지정)끼리 먼저 묶기
+    if (!bf) { const r = brandRank(a.brand) - brandRank(b.brand); if (r) return r; }
+    let av, bv;
+    if (sort.col === 'value') { av = a.stock*(a.cost||0); bv = b.stock*(b.cost||0); }
+    else { av = a[sort.col] ?? ''; bv = b[sort.col] ?? ''; }
+    if (typeof av === 'string') return String(av).localeCompare(String(bv), 'ko') * sort.dir;
+    return (av - bv) * sort.dir;
+  });
+
+  const tb = document.getElementById('tbody');
+  tb.innerHTML = list.map(it => {
+    const st = statusOf(it), [stLabel, stClass] = statusMeta[st];
+    const val = it.stock * (it.cost||0);
+    return `<tr>
+      <td><b>${esc(it.name)}</b></td>
+      <td>${brandTag(it.brand)}</td>
+      <td>${esc(it.sku) || '-'}</td>
+      <td class="num"><b>${it.stock.toLocaleString()}</b></td>
+      <td class="num">${it.safety.toLocaleString()}</td>
+      <td class="num">${it.cost ? usd(it.cost) : '-'}</td>
+      <td class="num">${it.price ? won(it.price) : '-'}</td>
+      <td class="num">${val ? usd(val) : '-'}</td>
+      <td><span class="pill ${stClass}">${stLabel}</span></td>
+      <td><div class="row-actions">
+        <button class="icon-btn in" title="입고" onclick="openMove('${it.id}',1)">▲ 입고</button>
+        <button class="icon-btn out" title="출고" onclick="openMove('${it.id}',-1)">▼ 출고</button>
+      </div></td>
+      <td><div class="row-actions">
+        <button class="icon-btn" title="이력" onclick="openHistory('${it.id}')">📜</button>
+        <button class="icon-btn" title="수정" onclick="openItemModal('${it.id}')">✏️</button>
+        <button class="icon-btn" title="삭제" onclick="delItem('${it.id}')">🗑️</button>
+      </div></td>
+    </tr>`;
+  }).join('');
+  document.getElementById('empty').style.display = list.length ? 'none' : 'block';
+
+  const qtyOf = arr => arr.reduce((s,i)=>s+i.stock,0);
+  const my = items.filter(i=>i.brand==='Mylabs'), ydy = items.filter(i=>i.brand==='YDY');
+  document.getElementById('statItems').textContent = items.length;
+  document.getElementById('statQty').textContent = qtyOf(items).toLocaleString();
+  document.getElementById('statValue').textContent = usd(items.reduce((s,i)=>s+i.stock*(i.cost||0),0));
+  document.getElementById('statLow').textContent = items.filter(i=>statusOf(i)!=='ok').length;
+  document.getElementById('statMylabs').textContent = `${my.length}종 · ${qtyOf(my).toLocaleString()}개`;
+  document.getElementById('statYdy').textContent = `${ydy.length}종 · ${qtyOf(ydy).toLocaleString()}개`;
+
+  refreshCats();
+}
+function esc(s){ return (s||'').replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+function refreshCats() {
+  const cats = [...new Set(items.map(i=>i.category).filter(Boolean))].sort();
+  const cf = document.getElementById('catFilter'), cur = cf.value;
+  cf.innerHTML = '<option value="">전체 분류</option>' + cats.map(c=>`<option ${c===cur?'selected':''}>${esc(c)}</option>`).join('');
+  document.getElementById('catList').innerHTML = cats.map(c=>`<option value="${esc(c)}">`).join('');
+}
+function sortBy(col){ sort.dir = (sort.col===col) ? -sort.dir : 1; sort.col = col; render(); }
+
+function openItemModal(id) {
+  editId = id || null;
+  document.getElementById('itemModalTitle').textContent = id ? '품목 수정' : '품목 추가';
+  const it = id ? items.find(i=>i.id===id) : { name:'',brand:'',sku:'',category:'',stock:0,safety:0,price:0,cost:0 };
+  f_name.value=it.name; f_brand.value=it.brand||''; f_sku.value=it.sku; f_category.value=it.category;
+  f_stock.value=it.stock; f_safety.value=it.safety; f_cost.value=it.cost||0; f_price.value=it.price;
+  refreshCats();
+  show('itemModal'); f_name.focus();
+}
+function saveItem() {
+  const name = f_name.value.trim();
+  if (!name) { alert('품목명을 입력하세요.'); f_name.focus(); return; }
+  const data = { name, brand:f_brand.value, sku:f_sku.value.trim(), category:f_category.value.trim(),
+    stock:+f_stock.value||0, safety:+f_safety.value||0, cost:+f_cost.value||0, price:+f_price.value||0 };
+  if (editId) Object.assign(items.find(i=>i.id===editId), data);
+  else items.push({ id: uid(), ...data });
+  save(); closeModal('itemModal'); render();
+}
+function delItem(id) {
+  const it = items.find(i=>i.id===id);
+  if (confirm(`"${it.name}" 품목을 삭제할까요?`)) { items = items.filter(i=>i.id!==id); save(); render(); }
+}
+function openMove(id, dir) {
+  moveId = id; moveDir = dir;
+  const it = items.find(i=>i.id===id);
+  document.getElementById('moveModalTitle').textContent = dir>0 ? '입고 (재고 증가)' : '출고 (재고 감소)';
+  document.getElementById('moveItemLabel').textContent = `${it.name} · 현재고 ${it.stock}`;
+  m_qty.value = 1; m_memo.value = ''; show('moveModal'); m_qty.focus(); m_qty.select();
+}
+function confirmMove() {
+  const qty = +m_qty.value||0;
+  if (qty <= 0) { alert('수량을 입력하세요.'); return; }
+  const it = items.find(i=>i.id===moveId);
+  const before = it.stock;
+  const next = before + moveDir*qty;
+  if (next < 0) { alert(`출고 수량이 현재고(${before})보다 많습니다.`); return; }
+  it.stock = next;
+  history.unshift({ id: uid(), itemId: it.id, itemName: it.name, ts: Date.now(),
+    dir: moveDir, qty, before, after: next, memo: m_memo.value.trim() });
+  save(); saveHistory(); closeModal('moveModal'); render();
+}
+function exportCSV() {
+  const head = ['품목명','브랜드','SKU','분류','현재고','안전재고','원가(USD)','판매가','재고금액(USD)','상태'];
+  const rows = items.map(it => [it.name, it.brand||'미지정', it.sku, it.category, it.stock, it.safety,
+    it.cost||0, it.price, it.stock*(it.cost||0), statusMeta[statusOf(it)][0]]);
+  const csv = [head, ...rows].map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob(['﻿'+csv], {type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `재고_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+}
+
+function fmtDate(ts) {
+  const d = new Date(ts);
+  const p = n => String(n).padStart(2,'0');
+  return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+function openHistory(itemId) {
+  histFilterId = itemId || null;
+  const it = itemId ? items.find(i=>i.id===itemId) : null;
+  document.getElementById('histTitle').textContent = it ? `입출고 이력 — ${it.name}` : '전체 입출고 이력';
+  renderHistory(); show('histModal');
+}
+function renderHistory() {
+  const list = history.filter(h => !histFilterId || h.itemId === histFilterId);
+  document.getElementById('histBody').innerHTML = list.map(h => `<tr>
+    <td>${fmtDate(h.ts)}</td>
+    <td>${esc(h.itemName)}</td>
+    <td class="${h.dir>0?'move-in':'move-out'}">${h.dir>0?'입고 ▲':'출고 ▼'}</td>
+    <td class="num ${h.dir>0?'move-in':'move-out'}">${h.dir>0?'+':'−'}${h.qty.toLocaleString()}</td>
+    <td class="num">${h.after.toLocaleString()}</td>
+    <td>${esc(h.memo) || '-'}</td>
+    <td><button class="del-x" title="기록 삭제" onclick="delHistory('${h.id}')">✕</button></td>
+  </tr>`).join('');
+  document.getElementById('histEmpty').style.display = list.length ? 'none' : 'block';
+}
+function delHistory(id) {
+  if (!confirm('이 이력 기록을 삭제할까요? (재고 수량은 변경되지 않습니다)')) return;
+  history = history.filter(h => h.id !== id); saveHistory(); renderHistory();
+}
+function exportHistoryCSV() {
+  const list = history.filter(h => !histFilterId || h.itemId === histFilterId);
+  const head = ['일시','품목','구분','수량','변동 전','변동 후','메모'];
+  const rows = list.map(h => [fmtDate(h.ts), h.itemName, h.dir>0?'입고':'출고',
+    h.qty, h.before, h.after, h.memo]);
+  const csv = [head, ...rows].map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob(['﻿'+csv], {type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `입출고이력_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+}
+// ── 스마트스토어 판매 반영 ─────────────────────────────────────────────
+// 옵션정보/상품명 키워드 → 보드 품목 SKU 매칭
+const SALES_MAP = [
+  { kw:['베르베린ms','berberinems'], sku:'MY-BERB-MS' },
+  { kw:['베르베린알파','berberinealpha'], sku:'MY-BERB-ALPHA' },
+  { kw:['올액티브','비큐텐','bq10'], sku:'YDY-BQ10' },
+  { kw:['피크노','썰큐','pycnogenol','circu'], sku:'YDY-CIRCU' },
+  { kw:['포뮬러프라임','포뮬러','브에이스','vsformula'], sku:'MY-VS-PRIME' },
+  { kw:['피토좀','phytosome'], sku:'YDY-PHYTOSOME' },
+  { kw:['마그듀오','마그네슘','magduo','magnesium'], sku:'YDY-MAGDUO-K2' },
+  { kw:['nad','엔에이디'], sku:'YDY-NAD' },
+  { kw:['리버덱스','리버','liverdex'], sku:'YDY-LIVER-DEX' },
+];
+const snorm = s => String(s==null?'':s).replace(/\s+/g,'').toLowerCase();
+function matchSku(opt, pname) {
+  const t = snorm(opt) + ' ' + snorm(pname);
+  for (const m of SALES_MAP) if (m.kw.some(k => t.includes(k))) return m.sku;
+  return null;
+}
+function packSize(opt) {
+  const m = String(opt||'').match(/(\d+)\s*개/);
+  return m ? parseInt(m[1],10) : 1;
+}
+function colFinder(header) {
+  // 헤더명(부분일치)으로 컬럼 인덱스 찾기
+  const find = (...names) => header.findIndex(h => names.some(n => snorm(h).includes(snorm(n))));
+  return {
+    order: find('상품주문번호','주문번호'),
+    opt: find('옵션정보','옵션'),
+    qty: find('수량'),
+    status: find('주문상태','상태'),
+    name: find('상품명'),
+  };
+}
+function handleSalesFile(input) {
+  const file = input.files && input.files[0];
+  input.value = '';
+  if (!file) return;
+  if (typeof XLSX === 'undefined') { alert('엑셀 라이브러리를 불러오지 못했습니다. 인터넷 연결 상태에서 다시 시도해 주세요.'); return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    let wb;
+    try { wb = XLSX.read(e.target.result, { type:'array' }); }
+    catch(err) {
+      if (/password/i.test(err.message)) alert('이 파일은 비밀번호로 보호되어 있습니다.\n엑셀에서 암호 없이 저장(또는 CSV로 저장)한 뒤 올려주세요.');
+      else alert('파일을 읽지 못했습니다: ' + err.message);
+      return;
+    }
+    const ws = wb.Sheets[wb.SheetNames[0]];
+    const rows = XLSX.utils.sheet_to_json(ws, { header:1, defval:null });
+    if (!rows.length) { alert('빈 파일입니다.'); return; }
+    const c = colFinder(rows[0]);
+    if (c.opt < 0 || c.qty < 0) { alert('옵션정보/수량 컬럼을 찾지 못했습니다. 스마트스토어 구매확정내역 파일이 맞는지 확인해 주세요.'); return; }
+    processSales(rows, c, file.name);
+  };
+  reader.readAsArrayBuffer(file);
+}
+function processSales(rows, c, fname) {
+  const agg = {};          // sku -> { orders, bottles, ids:[] }
+  let alreadyApplied = 0, skippedStatus = 0, dupInFile = 0;
+  const unmatched = {};
+  const seenIds = {};
+  for (let i=1; i<rows.length; i++) {
+    const r = rows[i];
+    if (!r || r[c.opt]==null) continue;
+    if (c.status>=0 && String(r[c.status]).trim() !== '구매확정') { skippedStatus++; continue; }
+    const oid = c.order>=0 ? String(r[c.order]) : null;
+    if (oid) {
+      if (applied[oid]) { alreadyApplied++; continue; }
+      if (seenIds[oid]) { dupInFile++; continue; }
+      seenIds[oid] = 1;
+    }
+    const sku = matchSku(r[c.opt], c.name>=0 ? r[c.name] : '');
+    if (!sku) { unmatched[String(r[c.opt])] = (unmatched[String(r[c.opt])]||0)+1; continue; }
+    const qty = Number(r[c.qty])||0;
+    const bottles = qty * packSize(r[c.opt]);
+    if (!agg[sku]) agg[sku] = { orders:0, bottles:0, ids:[] };
+    agg[sku].orders++; agg[sku].bottles += bottles;
+    if (oid) agg[sku].ids.push(oid);
+  }
+  pendingSales = { agg, fname, alreadyApplied, skippedStatus, unmatched };
+  renderSalesPreview();
+  show('salesModal');
+}
+function renderSalesPreview() {
+  const { agg, fname, alreadyApplied, skippedStatus, unmatched } = pendingSales;
+  const skus = Object.keys(agg);
+  let totBottles = 0, totOrders = 0;
+  const body = skus.map(sku => {
+    const it = items.find(i=>i.sku===sku);
+    const a = agg[sku]; totBottles += a.bottles; totOrders += a.orders;
+    const cur = it ? it.stock : 0, after = cur - a.bottles;
+    const nm = it ? it.name : `(보드에 없음: ${sku})`;
+    const br = it ? brandTag(it.brand) : '-';
+    return `<tr>
+      <td><b>${esc(nm)}</b></td><td>${br}</td>
+      <td class="num">${a.orders.toLocaleString()}</td>
+      <td class="num move-out">−${a.bottles.toLocaleString()}</td>
+      <td class="num">${it ? cur.toLocaleString() : '-'}</td>
+      <td class="num"><b>${it ? after.toLocaleString() : '-'}</b></td>
+    </tr>`;
+  }).join('');
+  document.getElementById('salesBody').innerHTML = body;
+  document.getElementById('salesEmpty').style.display = skus.length ? 'none' : 'block';
+  document.getElementById('salesApplyBtn').style.display = skus.length ? '' : 'none';
+  document.getElementById('salesSummary').innerHTML =
+    `파일: <b>${esc(fname)}</b> · 신규 반영 대상 <b>${totOrders.toLocaleString()}건 / ${totBottles.toLocaleString()}병</b>` +
+    ` · 이미 반영됨 ${alreadyApplied.toLocaleString()}건 · 구매확정 외 제외 ${skippedStatus.toLocaleString()}건`;
+  const unk = Object.keys(unmatched);
+  const negs = skus.filter(sku => { const it=items.find(i=>i.sku===sku); return it && it.stock - agg[sku].bottles < 0; });
+  let warn = '';
+  if (unk.length) warn += `⚠️ 매칭 안 된 옵션 ${unk.length}종 (제외됨): ${unk.slice(0,4).map(esc).join(', ')}${unk.length>4?' 외':''}. `;
+  if (negs.length) warn += `⚠️ 반영 시 재고가 음수가 되는 품목이 있습니다. 현재고가 최신인지 확인하세요.`;
+  document.getElementById('salesWarn').innerHTML = warn;
+}
+function applySales() {
+  if (!pendingSales) return;
+  const { agg, fname } = pendingSales;
+  const ts = Date.now();
+  let applraw = false;
+  Object.keys(agg).forEach(sku => {
+    const it = items.find(i=>i.sku===sku);
+    const a = agg[sku];
+    a.ids.forEach(id => { applied[id] = true; });
+    if (!it) return;
+    const before = it.stock;
+    it.stock = before - a.bottles;
+    history.unshift({ id: uid(), itemId: it.id, itemName: it.name, ts,
+      dir: -1, qty: a.bottles, before, after: it.stock,
+      memo: `스마트스토어 판매 반영 (${fname}, ${a.orders}건)` });
+    applraw = true;
+  });
+  save(); saveHistory(); saveApplied();
+  pendingSales = null;
+  closeModal('salesModal'); render();
+  if (applraw) alert('판매 내역을 출고로 반영했습니다. 입출고 이력에서 확인할 수 있습니다.');
+}
+
+function show(id){ document.getElementById(id).classList.add('show'); }
+function closeModal(id){ document.getElementById(id).classList.remove('show'); }
+document.querySelectorAll('.overlay').forEach(o => o.addEventListener('click', e => { if(e.target===o) o.classList.remove('show'); }));
+document.addEventListener('keydown', e => { if(e.key==='Escape') document.querySelectorAll('.overlay').forEach(o=>o.classList.remove('show')); });
+['m_qty','f_name'].forEach(id => document.getElementById(id).addEventListener('keydown', e => {
+  if(e.key==='Enter'){ id==='m_qty' ? confirmMove() : saveItem(); }
+}));
+
+load(); render();
+</script>
+
+
+</body></html>
