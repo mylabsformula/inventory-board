@@ -1,4 +1,4 @@
-<!-- inventory updated 2026-07-10 + 입출고 이력 backfill, build 1783901082 -->
+<!-- inventory updated 2026-07-10 + 이력 채널분리(세일즈/아이허브), build 1783901628 -->
 <!DOCTYPE html>
 <!-- saved from url=(0303)file:///C:/Users/kim11/AppData/Local/Packages/Claude_pzs8sxrjxfjjc/LocalCache/Roaming/Claude/local-agent-mode-sessions/8d92713f-db5f-44b4-858d-cd5377bf512e/b9257b3f-d036-44f3-9531-d9e4045d54d5/local_d0ce4429-4922-43bb-8dc5-621a085a676d/outputs/%EC%9E%AC%EA%B3%A0%EA%B4%80%EB%A6%AC%EB%B3%B4%EB%93%9C.html -->
 <html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -413,7 +413,7 @@
 
 <script src="./재고 관리 보드_files/xlsx.full.min.js.download"></script>
 <script>
-const KEY = 'inventory_board_v8';
+const KEY = 'inventory_board_v9';
 const HKEY = 'inventory_history_v1';
 const AKEY = 'inventory_applied_orders_v1';
 let items = [];
@@ -455,19 +455,21 @@ function seed() {
   };
   const W1 = new Date('2026-07-03T18:00:00').getTime();  // 6/29–7/3 배치
   const W2 = new Date('2026-07-10T18:00:00').getTime();  // 7/6–7/10 배치
-  // Week 1: 6/29–7/3 세일즈 + 아이허브 (원가 재고 → 지난주)
-  H('YDY-PHYTOSOME', W1, 3180, 17613, 14433, '6/29–7/3 세일즈+아이허브 출고');
-  H('MY-BERB-ALPHA', W1, 188,  4671,  4483,  '6/29–7/3 세일즈+아이허브 출고');
-  H('MY-VS-PRIME',   W1, 180,  7671,  7491,  '6/29–7/3 세일즈+아이허브 출고');
-  H('YDY-MAGDUO-K2', W1, 375,  9965,  9590,  '6/29–7/3 세일즈 출고');
-  H('YDY-CIRCU',     W1, 3,    6357,  6354,  '6/29–7/3 세일즈 출고');
-  // Week 2: 7/6–7/10 세일즈 + 아이허브 (지난주 → 이번주)
-  H('YDY-PHYTOSOME', W2, 1170, 14433, 13263, '7/6–7/10 세일즈+아이허브 출고');
-  H('MY-BERB-ALPHA', W2, 203,  4483,  4280,  '7/6–7/10 세일즈+아이허브 출고');
-  H('MY-VS-PRIME',   W2, 120,  7491,  7371,  '7/6–7/10 세일즈 출고');
-  H('YDY-MAGDUO-K2', W2, 208,  9590,  9382,  '7/6–7/10 세일즈 출고');
-  H('YDY-CIRCU',     W2, 14,   6354,  6340,  '7/6–7/10 세일즈 출고');
-  H('YDY-NAD',       W2, 1,    7946,  7945,  '7/6–7/10 세일즈 출고');
+  // Week 1: 6/29–7/3 — 일반 세일즈(스마트/쿠팡/11번가) + 아이허브를 분리 기록
+  const G1='6/29–7/3 일반 세일즈 (스마트/쿠팡/11번가)', I1='6/29–7/3 아이허브 출고';
+  H('YDY-PHYTOSOME', W1, 3060, 17613, 14553, G1); H('YDY-PHYTOSOME', W1, 120, 14553, 14433, I1);
+  H('MY-BERB-ALPHA', W1, 44,   4671,  4627,  G1); H('MY-BERB-ALPHA', W1, 144, 4627,  4483,  I1);
+  H('MY-VS-PRIME',   W1, 156,  7671,  7515,  G1); H('MY-VS-PRIME',   W1, 24,  7515,  7491,  I1);
+  H('YDY-MAGDUO-K2', W1, 375,  9965,  9590,  G1);
+  H('YDY-CIRCU',     W1, 3,    6357,  6354,  G1);
+  // Week 2: 7/6–7/10 — 일반 세일즈(스마트/11번가) + 아이허브를 분리 기록
+  const G2='7/6–7/10 일반 세일즈 (스마트/11번가)', I2='7/6–7/10 아이허브 출고';
+  H('YDY-PHYTOSOME', W2, 1002, 14433, 13431, G2); H('YDY-PHYTOSOME', W2, 168, 13431, 13263, I2);
+  H('MY-BERB-ALPHA', W2, 35,   4483,  4448,  G2); H('MY-BERB-ALPHA', W2, 168, 4448,  4280,  I2);
+  H('MY-VS-PRIME',   W2, 120,  7491,  7371,  G2);
+  H('YDY-MAGDUO-K2', W2, 208,  9590,  9382,  G2);
+  H('YDY-CIRCU',     W2, 14,   6354,  6340,  G2);
+  H('YDY-NAD',       W2, 1,    7946,  7945,  G2);
   history.sort((a,b) => b.ts - a.ts);  // 최신순
   save(); saveHistory();
 }
