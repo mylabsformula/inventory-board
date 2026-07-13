@@ -1,4 +1,4 @@
-<!-- inventory updated 2026-07-10: 7/6-7/10 sales + iHerb 7/8, build 1783900558 -->
+<!-- inventory updated 2026-07-10 + 입출고 이력 backfill, build 1783901082 -->
 <!DOCTYPE html>
 <!-- saved from url=(0303)file:///C:/Users/kim11/AppData/Local/Packages/Claude_pzs8sxrjxfjjc/LocalCache/Roaming/Claude/local-agent-mode-sessions/8d92713f-db5f-44b4-858d-cd5377bf512e/b9257b3f-d036-44f3-9531-d9e4045d54d5/local_d0ce4429-4922-43bb-8dc5-621a085a676d/outputs/%EC%9E%AC%EA%B3%A0%EA%B4%80%EB%A6%AC%EB%B3%B4%EB%93%9C.html -->
 <html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -413,7 +413,7 @@
 
 <script src="./재고 관리 보드_files/xlsx.full.min.js.download"></script>
 <script>
-const KEY = 'inventory_board_v7';
+const KEY = 'inventory_board_v8';
 const HKEY = 'inventory_history_v1';
 const AKEY = 'inventory_applied_orders_v1';
 let items = [];
@@ -446,7 +446,30 @@ function seed() {
     P('Berberine MS', 'MY-BERB-MS', 'Mylabs', 0, 5.23),
     P('VS Formula Prime', 'MY-VS-PRIME', 'Mylabs', 7371, 5.19),
   ];
-  save();
+  // ── 주별 출고 이력 백필 (재고 변경과 함께 자동 기록) ──
+  const bySku = {}; items.forEach(it => bySku[it.sku] = it);
+  history = [];
+  const H = (sku, ts, qty, before, after, memo) => {
+    const it = bySku[sku]; if (!it) return;
+    history.push({ id: uid(), itemId: it.id, itemName: it.name, ts, dir:-1, qty, before, after, memo });
+  };
+  const W1 = new Date('2026-07-03T18:00:00').getTime();  // 6/29–7/3 배치
+  const W2 = new Date('2026-07-10T18:00:00').getTime();  // 7/6–7/10 배치
+  // Week 1: 6/29–7/3 세일즈 + 아이허브 (원가 재고 → 지난주)
+  H('YDY-PHYTOSOME', W1, 3180, 17613, 14433, '6/29–7/3 세일즈+아이허브 출고');
+  H('MY-BERB-ALPHA', W1, 188,  4671,  4483,  '6/29–7/3 세일즈+아이허브 출고');
+  H('MY-VS-PRIME',   W1, 180,  7671,  7491,  '6/29–7/3 세일즈+아이허브 출고');
+  H('YDY-MAGDUO-K2', W1, 375,  9965,  9590,  '6/29–7/3 세일즈 출고');
+  H('YDY-CIRCU',     W1, 3,    6357,  6354,  '6/29–7/3 세일즈 출고');
+  // Week 2: 7/6–7/10 세일즈 + 아이허브 (지난주 → 이번주)
+  H('YDY-PHYTOSOME', W2, 1170, 14433, 13263, '7/6–7/10 세일즈+아이허브 출고');
+  H('MY-BERB-ALPHA', W2, 203,  4483,  4280,  '7/6–7/10 세일즈+아이허브 출고');
+  H('MY-VS-PRIME',   W2, 120,  7491,  7371,  '7/6–7/10 세일즈 출고');
+  H('YDY-MAGDUO-K2', W2, 208,  9590,  9382,  '7/6–7/10 세일즈 출고');
+  H('YDY-CIRCU',     W2, 14,   6354,  6340,  '7/6–7/10 세일즈 출고');
+  H('YDY-NAD',       W2, 1,    7946,  7945,  '7/6–7/10 세일즈 출고');
+  history.sort((a,b) => b.ts - a.ts);  // 최신순
+  save(); saveHistory();
 }
 function uid() { return Math.random().toString(36).slice(2, 9); }
 function won(n) { return '₩' + Math.round(n).toLocaleString('ko-KR'); }
