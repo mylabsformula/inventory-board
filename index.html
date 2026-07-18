@@ -1,4 +1,4 @@
-<!-- inventory updated 2026-07-10 + 이력 채널분리(세일즈/아이허브), build 1783901628 -->
+<!-- inventory updated 2026-07-17: 7/11–7/17 sales, key v10, build 1784355136 -->
 <!DOCTYPE html>
 <!-- saved from url=(0303)file:///C:/Users/kim11/AppData/Local/Packages/Claude_pzs8sxrjxfjjc/LocalCache/Roaming/Claude/local-agent-mode-sessions/8d92713f-db5f-44b4-858d-cd5377bf512e/b9257b3f-d036-44f3-9531-d9e4045d54d5/local_d0ce4429-4922-43bb-8dc5-621a085a676d/outputs/%EC%9E%AC%EA%B3%A0%EA%B4%80%EB%A6%AC%EB%B3%B4%EB%93%9C.html -->
 <html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -157,7 +157,7 @@
       <td><b>Berberine Alpha</b></td>
       <td><span class="brand-tag b-mylabs">🔵 Mylabs</span></td>
       <td>MY-BERB-ALPHA</td>
-      <td class="num"><b>4,280</b></td>
+      <td class="num"><b>4,217</b></td>
       <td class="num">0</td>
       <td class="num">$8.46</td>
       <td class="num">-</td>
@@ -195,7 +195,7 @@
       <td><b>VS Formula Prime</b></td>
       <td><span class="brand-tag b-mylabs">🔵 Mylabs</span></td>
       <td>MY-VS-PRIME</td>
-      <td class="num"><b>7,371</b></td>
+      <td class="num"><b>7,359</b></td>
       <td class="num">0</td>
       <td class="num">$5.19</td>
       <td class="num">-</td>
@@ -233,7 +233,7 @@
       <td><b>Berberine Phytosome with R-lipoic Acid</b></td>
       <td><span class="brand-tag b-ydy">🟣 YDY</span></td>
       <td>YDY-PHYTOSOME</td>
-      <td class="num"><b>13,263</b></td>
+      <td class="num"><b>13,176</b></td>
       <td class="num">0</td>
       <td class="num">$15.99</td>
       <td class="num">-</td>
@@ -252,7 +252,7 @@
       <td><b>Chelated Magnesium with K2</b></td>
       <td><span class="brand-tag b-ydy">🟣 YDY</span></td>
       <td>YDY-MAGDUO-K2</td>
-      <td class="num"><b>9,382</b></td>
+      <td class="num"><b>9,313</b></td>
       <td class="num">0</td>
       <td class="num">$9.99</td>
       <td class="num">-</td>
@@ -271,7 +271,7 @@
       <td><b>Circu-Pycnogenol®</b></td>
       <td><span class="brand-tag b-ydy">🟣 YDY</span></td>
       <td>YDY-CIRCU</td>
-      <td class="num"><b>6,340</b></td>
+      <td class="num"><b>6,325</b></td>
       <td class="num">0</td>
       <td class="num">$22.99</td>
       <td class="num">-</td>
@@ -290,7 +290,7 @@
       <td><b>Liver-Dex</b></td>
       <td><span class="brand-tag b-ydy">🟣 YDY</span></td>
       <td>YDY-LIVER-DEX</td>
-      <td class="num"><b>8,436</b></td>
+      <td class="num"><b>8,435</b></td>
       <td class="num">0</td>
       <td class="num">-</td>
       <td class="num">-</td>
@@ -413,7 +413,7 @@
 
 <script src="./재고 관리 보드_files/xlsx.full.min.js.download"></script>
 <script>
-const KEY = 'inventory_board_v9';
+const KEY = 'inventory_board_v10';
 const HKEY = 'inventory_history_v1';
 const AKEY = 'inventory_applied_orders_v1';
 let items = [];
@@ -436,15 +436,15 @@ function seed() {
   // 원가 = COST_TABLE 단위원가(USD), 제품 원가만 (배송비 제외)
   const P = (name, sku, brand, stock, cost) => ({ id: uid(), name, sku, brand, category: 'Supplement', stock, safety: 0, price: 0, cost });
   items = [
-    P('Berberine Phytosome with R-lipoic Acid', 'YDY-PHYTOSOME', 'YDY', 13263, 15.99),
+    P('Berberine Phytosome with R-lipoic Acid', 'YDY-PHYTOSOME', 'YDY', 13176, 15.99),
     P('All Active BQ10 with Quatrefolic®', 'YDY-BQ10', 'YDY', 32, 16.49),
-    P('Chelated Magnesium with K2', 'YDY-MAGDUO-K2', 'YDY', 9382, 9.99),
+    P('Chelated Magnesium with K2', 'YDY-MAGDUO-K2', 'YDY', 9313, 9.99),
     P('NAD+ Tri-complex', 'YDY-NAD', 'YDY', 7945, 17.99),
-    P('Circu-Pycnogenol®', 'YDY-CIRCU', 'YDY', 6340, 22.99),
-    P('Liver-Dex', 'YDY-LIVER-DEX', 'YDY', 8436, 0),
-    P('Berberine Alpha', 'MY-BERB-ALPHA', 'Mylabs', 4280, 8.46),
+    P('Circu-Pycnogenol®', 'YDY-CIRCU', 'YDY', 6325, 22.99),
+    P('Liver-Dex', 'YDY-LIVER-DEX', 'YDY', 8435, 0),
+    P('Berberine Alpha', 'MY-BERB-ALPHA', 'Mylabs', 4217, 8.46),
     P('Berberine MS', 'MY-BERB-MS', 'Mylabs', 0, 5.23),
-    P('VS Formula Prime', 'MY-VS-PRIME', 'Mylabs', 7371, 5.19),
+    P('VS Formula Prime', 'MY-VS-PRIME', 'Mylabs', 7359, 5.19),
   ];
   // ── 주별 출고 이력 백필 (재고 변경과 함께 자동 기록) ──
   const bySku = {}; items.forEach(it => bySku[it.sku] = it);
@@ -470,6 +470,14 @@ function seed() {
   H('YDY-MAGDUO-K2', W2, 208,  9590,  9382,  G2);
   H('YDY-CIRCU',     W2, 14,   6354,  6340,  G2);
   H('YDY-NAD',       W2, 1,    7946,  7945,  G2);
+  const W3 = new Date('2026-07-17T18:00:00').getTime();  // 7/11–7/17 배치
+  const G3='7/11–7/17 일반 세일즈 (스마트/쿠팡/11번가)';
+  H('YDY-PHYTOSOME', W3, 87, 13263, 13176, G3);
+  H('MY-BERB-ALPHA', W3, 63, 4280,  4217,  G3);
+  H('MY-VS-PRIME',   W3, 12, 7371,  7359,  G3);
+  H('YDY-MAGDUO-K2', W3, 69, 9382,  9313,  G3);
+  H('YDY-CIRCU',     W3, 15, 6340,  6325,  G3);
+  H('YDY-LIVER-DEX', W3, 1,  8436,  8435,  G3);
   history.sort((a,b) => b.ts - a.ts);  // 최신순
   save(); saveHistory();
 }
