@@ -1,4 +1,4 @@
-<!-- inventory updated 2026-07-24: 7/20-7/24 sales + BQ10 restock, key v11, build 1784944784 -->
+<!-- inventory updated 2026-07-24 + 약사별 공구 구분, key v12, build 1784945246 -->
 <!DOCTYPE html>
 <!-- saved from url=(0303)file:///C:/Users/kim11/AppData/Local/Packages/Claude_pzs8sxrjxfjjc/LocalCache/Roaming/Claude/local-agent-mode-sessions/8d92713f-db5f-44b4-858d-cd5377bf512e/b9257b3f-d036-44f3-9531-d9e4045d54d5/local_d0ce4429-4922-43bb-8dc5-621a085a676d/outputs/%EC%9E%AC%EA%B3%A0%EA%B4%80%EB%A6%AC%EB%B3%B4%EB%93%9C.html -->
 <html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -413,7 +413,7 @@
 
 <script src="./재고 관리 보드_files/xlsx.full.min.js.download"></script>
 <script>
-const KEY = 'inventory_board_v11';
+const KEY = 'inventory_board_v12';
 const HKEY = 'inventory_history_v1';
 const AKEY = 'inventory_applied_orders_v1';
 let items = [];
@@ -482,17 +482,19 @@ function seed() {
   H('YDY-MAGDUO-K2', W3, 69, 9382,  9313,  G3);
   H('YDY-CIRCU',     W3, 15, 6340,  6325,  G3);
   H('YDY-LIVER-DEX', W3, 1,  8436,  8435,  G3);
-  const W4 = new Date('2026-07-24T18:00:00').getTime();  // 7/20–7/24 배치
-  // BQ10: 입고 5,000 → 샘플 57·별도 2 출고 → 공구 734 출고
+  const W4 = new Date('2026-07-24T18:00:00').getTime();  // 7/20–7/24 배치 (약사별 공구 구분)
+  // BQ10: 입고 5,000 → 샘플 57·별도 2 → 약사피셜 공구 732 → 단일 2
   HI('YDY-BQ10',     W4, 5000, 32,    5032,  'BQ10 입고 5,000');
   H('YDY-BQ10',      W4, 57,   5032,  4975,  'BQ10 샘플 발송 57');
   H('YDY-BQ10',      W4, 2,    4975,  4973,  'BQ10 별도 발송 2');
-  H('YDY-BQ10',      W4, 734,  4973,  4239,  '7/20–7/24 일반 세일즈 (BQ10 공구)');
-  const G4='7/20–7/24 일반 세일즈 (스마트/쿠팡)';
-  H('YDY-PHYTOSOME', W4, 246, 13176, 12930, G4);
-  H('YDY-MAGDUO-K2', W4, 392, 9313,  8921,  G4);
-  H('MY-BERB-ALPHA', W4, 16,  4217,  4201,  G4);
-  H('MY-VS-PRIME',   W4, 17,  7359,  7342,  G4);
+  H('YDY-BQ10',      W4, 732,  4973,  4241,  '약사피셜 공구 (BQ10)');
+  H('YDY-BQ10',      W4, 2,    4241,  4239,  '단일(비공구) 판매 (BQ10)');
+  H('YDY-MAGDUO-K2', W4, 387,  9313,  8926,  '약사피셜 공구 (마그네슘 K2)');
+  H('YDY-MAGDUO-K2', W4, 5,    8926,  8921,  '단일(비공구) 판매 (마그네슘 K2)');
+  H('YDY-PHYTOSOME', W4, 213,  13176, 12963, '쀼약사 공구 (파이토좀)');
+  H('YDY-PHYTOSOME', W4, 33,   12963, 12930, '형제약사 공구 (파이토좀)');
+  H('MY-BERB-ALPHA', W4, 16,   4217,  4201,  '7/20–7/24 일반 세일즈 (스마트/쿠팡)');
+  H('MY-VS-PRIME',   W4, 17,   7359,  7342,  '7/20–7/24 일반 세일즈 (스마트/쿠팡)');
   history.sort((a,b) => b.ts - a.ts);  // 최신순
   save(); saveHistory();
 }
