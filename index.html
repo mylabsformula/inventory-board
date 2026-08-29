@@ -1,4 +1,4 @@
-<!-- 2026-08-21: 8월3주차(8/15-8/21) 판매+재발송+아이허브0100-0101 반영, key v18, build 1787363788 -->
+<!-- 2026-08-28: 8월4주차 반영 + Berberine Alpha 72 정정 (키 v20 재시드), build 1787984367 old 1787982742 -->
 <!-- memo standardized + date range kept, key v14, build 1785564243 -->
 <!DOCTYPE html>
 <!-- saved from url=(0303)file:///C:/Users/kim11/AppData/Local/Packages/Claude_pzs8sxrjxfjjc/LocalCache/Roaming/Claude/local-agent-mode-sessions/8d92713f-db5f-44b4-858d-cd5377bf512e/b9257b3f-d036-44f3-9531-d9e4045d54d5/local_d0ce4429-4922-43bb-8dc5-621a085a676d/outputs/%EC%9E%AC%EA%B3%A0%EA%B4%80%EB%A6%AC%EB%B3%B4%EB%93%9C.html -->
@@ -112,12 +112,12 @@
   </header>
 
   <div class="cards">
-    <div class="card"><div class="label">총 품목 수</div><div class="value" id="statItems">9</div></div>
-    <div class="card"><div class="label">총 재고 수량</div><div class="value" id="statQty">46,234</div></div>
-    <div class="card"><div class="label">총 재고 금액 (원가 $)</div><div class="value" id="statValue">$692,712.11</div></div>
+    <div class="card"><div class="label">총 품목 수</div><div class="value" id="statItems">10</div></div>
+    <div class="card"><div class="label">총 재고 수량</div><div class="value" id="statQty">57,545</div></div>
+    <div class="card"><div class="label">총 재고 금액 (원가 $)</div><div class="value" id="statValue">$838,641.56</div></div>
     <div class="card warn"><div class="label">재고 부족 품목</div><div class="value" id="statLow">0</div></div>
-    <div class="card"><div class="label">🔵 Mylabs</div><div class="value sm" id="statMylabs">3종 · 14,068개</div></div>
-    <div class="card"><div class="label">🟣 YDY</div><div class="value sm" id="statYdy">6종 · 32,166개</div></div>
+    <div class="card"><div class="label">🔵 Mylabs</div><div class="value sm" id="statMylabs">4종 · 17,678개</div></div>
+    <div class="card"><div class="label">🟣 YDY</div><div class="value sm" id="statYdy">6종 · 39,867개</div></div>
   </div>
 
   <div class="controls">
@@ -158,7 +158,7 @@
       <td><b>Berberine Alpha</b></td>
       <td><span class="brand-tag b-mylabs">🔵 Mylabs</span></td>
       <td>MY-BERB-ALPHA</td>
-      <td class="num"><b>1,055</b></td>
+      <td class="num"><b>72</b></td>
       <td class="num">0</td>
       <td class="num">$8.46</td>
       <td class="num">-</td>
@@ -196,7 +196,7 @@
       <td><b>VS Formula Prime</b></td>
       <td><span class="brand-tag b-mylabs">🔵 Mylabs</span></td>
       <td>MY-VS-PRIME</td>
-      <td class="num"><b>7,263</b></td>
+      <td class="num"><b>7,249</b></td>
       <td class="num">0</td>
       <td class="num">$5.19</td>
       <td class="num">-</td>
@@ -212,10 +212,29 @@
         <button class="icon-btn" title="삭제" onclick="delItem(&#39;24cbj1q&#39;)">🗑️</button>
       </div></td>
     </tr><tr>
+      <td><b>Mylabs Mag Up</b></td>
+      <td><span class="brand-tag b-mylabs">🔵 Mylabs</span></td>
+      <td>MY-MAGUP</td>
+      <td class="num"><b>4,607</b></td>
+      <td class="num">0</td>
+      <td class="num">$5.90</td>
+      <td class="num">-</td>
+      <td class="num">$27,181.30</td>
+      <td><span class="pill ok">정상</span></td>
+      <td><div class="row-actions">
+        <button class="icon-btn in" title="입고" onclick="openMove(&#39;magup01&#39;,1)">▲ 입고</button>
+        <button class="icon-btn out" title="출고" onclick="openMove(&#39;magup01&#39;,-1)">▼ 출고</button>
+      </div></td>
+      <td><div class="row-actions">
+        <button class="icon-btn" title="이력" onclick="openHistory(&#39;magup01&#39;)">📜</button>
+        <button class="icon-btn" title="수정" onclick="openItemModal(&#39;magup01&#39;)">✏️</button>
+        <button class="icon-btn" title="삭제" onclick="delItem(&#39;magup01&#39;)">🗑️</button>
+      </div></td>
+    </tr><tr>
       <td><b>All Active BQ10 with Quatrefolic®</b></td>
       <td><span class="brand-tag b-ydy">🟣 YDY</span></td>
       <td>YDY-BQ10</td>
-      <td class="num"><b>633</b></td>
+      <td class="num"><b>8,671</b></td>
       <td class="num">0</td>
       <td class="num">$16.49</td>
       <td class="num">-</td>
@@ -234,7 +253,7 @@
       <td><b>Berberine Phytosome with R-lipoic Acid</b></td>
       <td><span class="brand-tag b-ydy">🟣 YDY</span></td>
       <td>YDY-PHYTOSOME</td>
-      <td class="num"><b>7,799</b></td>
+      <td class="num"><b>7,466</b></td>
       <td class="num">0</td>
       <td class="num">$15.99</td>
       <td class="num">-</td>
@@ -253,7 +272,7 @@
       <td><b>Chelated Magnesium with K2</b></td>
       <td><span class="brand-tag b-ydy">🟣 YDY</span></td>
       <td>YDY-MAGDUO-K2</td>
-      <td class="num"><b>5,595</b></td>
+      <td class="num"><b>5,594</b></td>
       <td class="num">0</td>
       <td class="num">$9.99</td>
       <td class="num">-</td>
@@ -291,7 +310,7 @@
       <td><b>Liver-Dex</b></td>
       <td><span class="brand-tag b-ydy">🟣 YDY</span></td>
       <td>YDY-LIVER-DEX</td>
-      <td class="num"><b>4,354</b></td>
+      <td class="num"><b>4,351</b></td>
       <td class="num">0</td>
       <td class="num">-</td>
       <td class="num">-</td>
@@ -414,7 +433,7 @@
 
 <script src="./재고 관리 보드_files/xlsx.full.min.js.download"></script>
 <script>
-const KEY = 'inventory_board_v18';
+const KEY = 'inventory_board_v20';
 const HKEY = 'inventory_history_v1';
 const AKEY = 'inventory_applied_orders_v1';
 let items = [];
@@ -437,15 +456,16 @@ function seed() {
   // 원가 = COST_TABLE 단위원가(USD), 제품 원가만 (배송비 제외)
   const P = (name, sku, brand, stock, cost) => ({ id: uid(), name, sku, brand, category: 'Supplement', stock, safety: 0, price: 0, cost });
   items = [
-    P('Berberine Phytosome with R-lipoic Acid', 'YDY-PHYTOSOME', 'YDY', 7799, 15.99),
-    P('All Active BQ10 with Quatrefolic®', 'YDY-BQ10', 'YDY', 633, 16.49),
-    P('Chelated Magnesium with K2', 'YDY-MAGDUO-K2', 'YDY', 5595, 9.99),
+    P('Berberine Phytosome with R-lipoic Acid', 'YDY-PHYTOSOME', 'YDY', 7466, 15.99),
+    P('All Active BQ10 with Quatrefolic®', 'YDY-BQ10', 'YDY', 8671, 16.49),
+    P('Chelated Magnesium with K2', 'YDY-MAGDUO-K2', 'YDY', 5594, 9.99),
     P('NAD+ Tri-complex', 'YDY-NAD', 'YDY', 7704, 17.99),
     P('Circu-Pycnogenol®', 'YDY-CIRCU', 'YDY', 6081, 22.99),
-    P('Liver-Dex', 'YDY-LIVER-DEX', 'YDY', 4354, 24.99),
-    P('Berberine Alpha', 'MY-BERB-ALPHA', 'Mylabs', 1055, 8.46),
+    P('Liver-Dex', 'YDY-LIVER-DEX', 'YDY', 4351, 24.99),
+    P('Berberine Alpha', 'MY-BERB-ALPHA', 'Mylabs', 72, 8.46),
     P('Berberine MS', 'MY-BERB-MS', 'Mylabs', 5750, 11.8),
-    P('VS Formula Prime', 'MY-VS-PRIME', 'Mylabs', 7263, 5.19),
+    P('VS Formula Prime', 'MY-VS-PRIME', 'Mylabs', 7249, 5.19),
+    P('Mylabs Mag Up', 'MY-MAGUP', 'Mylabs', 4607, 5.9),
   ];
   // ── 주별 출고 이력 백필 (재고 변경과 함께 자동 기록) ──
   const bySku = {}; items.forEach(it => bySku[it.sku] = it);
@@ -566,6 +586,20 @@ function seed() {
   H('MY-BERB-ALPHA', W8, 5, 1060, 1055, '8/15–8/21 재배송');
   H('MY-VS-PRIME', W8, 20, 7307, 7287, '8/15–8/21 일반세일즈');
   H('MY-VS-PRIME', W8, 24, 7287, 7263, '8/15–8/21 아이허브 #0101');
+  const W9 = new Date('2026-08-28T18:00:00').getTime();  // 8/22–8/28
+  HI('YDY-BQ10', W9, 9216, 633, 9849, '8/22–8/28 입고');
+  H('YDY-BQ10', W9, 738, 9849, 9111, '8/22–8/28 릴리약사 공구');
+  H('YDY-BQ10', W9, 372, 9111, 8739, '8/22–8/28 형제약사 공구');
+  H('YDY-BQ10', W9, 66, 8739, 8673, '8/22–8/28 일반세일즈');
+  H('YDY-BQ10', W9, 2, 8673, 8671, '8/22–8/28 재배송');
+  H('YDY-PHYTOSOME', W9, 333, 7799, 7466, '8/22–8/28 일반세일즈');
+  H('MY-BERB-ALPHA', W9, 804, 1055, 251, '8/22–8/28 약사임당 공구');
+  H('MY-BERB-ALPHA', W9, 2, 251, 249, '8/22–8/28 재배송');
+  H('MY-BERB-ALPHA', W9, 177, 249, 72, '8/22–8/28 재고 정정');
+  H('YDY-LIVER-DEX', W9, 3, 4354, 4351, '8/22–8/28 일반세일즈');
+  H('YDY-MAGDUO-K2', W9, 1, 5595, 5594, '8/22–8/28 일반세일즈');
+  H('MY-VS-PRIME', W9, 14, 7263, 7249, '8/22–8/28 일반세일즈');
+  HI('MY-MAGUP', W9, 4607, 0, 4607, '8/22–8/28 입고');
   history.sort((a,b) => b.ts - a.ts);  // 최신순
   save(); saveHistory();
 }
