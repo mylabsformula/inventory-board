@@ -1,3 +1,5 @@
+<!-- 2026-09-19: BQ10 8/15~9/11 출고를 구매확정내역 기준으로 재산정(+1,005), 8/24 한박스 반출 24 추가 → 9/18 기준 5,408. 저장키 v27 + BUILD 스탬프 재시드, 저장소 차단 환경에서도 렌더되도록 save() try/catch -->
+<!-- 2026-09-19: 9월3주차(9/14–9/18, 주말 9/12–9/13 주문 포함) 스마트스토어·11번가·쿠팡 판매 + 아이허브 #0107·#0108 반영, 저장키 v25 재시드, build 1789796400 -->
 <!-- 2026-09-13: 9월2주차(9/7–9/11) 스마트스토어 판매 + 아이허브 #0102~#0106 반영, 저장키 v24 재시드, build 1789272337 -->
 <!-- 2026-09-05: 채널별 메모 정정(11번가=VS Formula만), 저장키 v23 재시드, build 1788593806 -->
 <!-- 2026-09-05: 9월1주차(8/31–9/4) 판매 반영, 저장키 v22 재시드, build 1788593410 -->
@@ -436,7 +438,10 @@
 
 <script src="./재고 관리 보드_files/xlsx.full.min.js.download"></script>
 <script>
-const KEY = 'inventory_board_v24';
+const KEY = 'inventory_board_v27';
+// 파일 내용이 바뀔 때마다 갱신. 저장된 스탬프와 다르면 무조건 재시드하므로
+// 같은 저장키로 파일을 다시 배포해도 옛 데이터가 남지 않음.
+const BUILD = '20260919-01';
 const HKEY = 'inventory_history_v1';
 const AKEY = 'inventory_applied_orders_v1';
 let items = [];
@@ -450,24 +455,27 @@ function load() {
   try { items = JSON.parse(localStorage.getItem(KEY)) || []; } catch(e){ items = []; }
   try { history = JSON.parse(localStorage.getItem(HKEY)) || []; } catch(e){ history = []; }
   try { applied = JSON.parse(localStorage.getItem(AKEY)) || {}; } catch(e){ applied = {}; }
-  if (items.length === 0) seed();
+  let stamp = null;
+  try { stamp = localStorage.getItem(KEY + '_build'); } catch(e){}
+  if (items.length === 0 || stamp !== BUILD) seed();
 }
-function save() { localStorage.setItem(KEY, JSON.stringify(items)); }
-function saveHistory() { localStorage.setItem(HKEY, JSON.stringify(history)); }
-function saveApplied() { localStorage.setItem(AKEY, JSON.stringify(applied)); }
+// 저장소가 막힌 환경(미리보기/사생활 보호 모드 등)에서도 보드가 렌더되도록 try/catch로 감쌈
+function save() { try { localStorage.setItem(KEY, JSON.stringify(items)); } catch(e){} }
+function saveHistory() { try { localStorage.setItem(HKEY, JSON.stringify(history)); } catch(e){} }
+function saveApplied() { try { localStorage.setItem(AKEY, JSON.stringify(applied)); } catch(e){} }
 function seed() {
   // 원가 = COST_TABLE 단위원가(USD), 제품 원가만 (배송비 제외)
   const P = (name, sku, brand, stock, cost) => ({ id: uid(), name, sku, brand, category: 'Supplement', stock, safety: 0, price: 0, cost });
   items = [
-    P('Berberine Phytosome with R-lipoic Acid', 'YDY-PHYTOSOME', 'YDY', 3868, 15.99),
-    P('All Active BQ10 with Quatrefolic®', 'YDY-BQ10', 'YDY', 6635, 16.49),
-    P('Chelated Magnesium with K2', 'YDY-MAGDUO-K2', 'YDY', 4829, 9.99),
-    P('NAD+ Tri-complex', 'YDY-NAD', 'YDY', 7700, 17.99),
-    P('Circu-Pycnogenol®', 'YDY-CIRCU', 'YDY', 6075, 22.99),
-    P('Liver-Dex', 'YDY-LIVER-DEX', 'YDY', 4331, 24.99),
+    P('Berberine Phytosome with R-lipoic Acid', 'YDY-PHYTOSOME', 'YDY', 2917, 15.99),
+    P('All Active BQ10 with Quatrefolic®', 'YDY-BQ10', 'YDY', 5408, 16.49),
+    P('Chelated Magnesium with K2', 'YDY-MAGDUO-K2', 'YDY', 4632, 9.99),
+    P('NAD+ Tri-complex', 'YDY-NAD', 'YDY', 7676, 17.99),
+    P('Circu-Pycnogenol®', 'YDY-CIRCU', 'YDY', 6074, 22.99),
+    P('Liver-Dex', 'YDY-LIVER-DEX', 'YDY', 4271, 24.99),
     P('Berberine Alpha', 'MY-BERB-ALPHA', 'Mylabs', 69, 8.46),
     P('Berberine MS', 'MY-BERB-MS', 'Mylabs', 4886, 11.8),
-    P('VS Formula Prime', 'MY-VS-PRIME', 'Mylabs', 7211, 5.19),
+    P('VS Formula Prime', 'MY-VS-PRIME', 'Mylabs', 7190, 5.19),
     P('Mag Up', 'MY-MAGUP', 'Mylabs', 4607, 5.9),
   ];
   // ── 주별 출고 이력 백필 (재고 변경과 함께 자동 기록) ──
@@ -573,10 +581,10 @@ function seed() {
   H('MY-BERB-ALPHA', W7, 19, 1079, 1060, '7/26–8/11 재배송');
   H('MY-VS-PRIME', W7, 20, 7327, 7307, '8/8–8/14 일반세일즈');
   const W8 = new Date('2026-08-21T18:00:00').getTime();  // 8/15–8/21
-  H('YDY-BQ10', W8, 240, 1281, 1041, '8/15–8/21 형제약사 공구');
-  H('YDY-BQ10', W8, 66, 1041, 975, '8/15–8/21 일반세일즈');
-  H('YDY-BQ10', W8, 336, 975, 639, '8/15–8/21 아이허브 #0100');
-  H('YDY-BQ10', W8, 6, 639, 633, '8/15–8/21 재배송');
+  H('YDY-BQ10', W8, 270, 1281, 1011, '8/15–8/21 형제약사 공구');
+  H('YDY-BQ10', W8, 67, 1011, 944, '8/15–8/21 일반세일즈');
+  H('YDY-BQ10', W8, 336, 944, 608, '8/15–8/21 아이허브 #0100');
+  H('YDY-BQ10', W8, 6, 608, 602, '8/15–8/21 재배송');
   H('YDY-PHYTOSOME', W8, 226, 8553, 8327, '8/15–8/21 일반세일즈');
   H('YDY-PHYTOSOME', W8, 528, 8327, 7799, '8/15–8/21 아이허브 #0100·0101');
   H('YDY-MAGDUO-K2', W8, 5, 5720, 5715, '8/15–8/21 일반세일즈');
@@ -590,11 +598,12 @@ function seed() {
   H('MY-VS-PRIME', W8, 20, 7307, 7287, '8/15–8/21 일반세일즈');
   H('MY-VS-PRIME', W8, 24, 7287, 7263, '8/15–8/21 아이허브 #0101');
   const W9 = new Date('2026-08-28T18:00:00').getTime();  // 8/22–8/28
-  HI('YDY-BQ10', W9, 9216, 633, 9849, '8/22–8/28 입고');
-  H('YDY-BQ10', W9, 738, 9849, 9111, '8/22–8/28 릴리약사 공구');
-  H('YDY-BQ10', W9, 372, 9111, 8739, '8/22–8/28 형제약사 공구');
-  H('YDY-BQ10', W9, 66, 8739, 8673, '8/22–8/28 일반세일즈');
-  H('YDY-BQ10', W9, 2, 8673, 8671, '8/22–8/28 재배송');
+  HI('YDY-BQ10', W9, 9216, 602, 9818, '8/22–8/28 입고');
+  H('YDY-BQ10', W9, 1782, 9818, 8036, '8/22–8/28 릴리약사 공구 (구매확정 기준 정정)');
+  H('YDY-BQ10', W9, 342, 8036, 7694, '8/22–8/28 형제약사 공구 (구매확정 기준 정정)');
+  H('YDY-BQ10', W9, 68, 7694, 7626, '8/22–8/28 일반세일즈');
+  H('YDY-BQ10', W9, 2, 7626, 7624, '8/22–8/28 재배송');
+  H('YDY-BQ10', W9, 24, 7624, 7600, '8/24 한박스 반출 (배송사 이력)');
   H('YDY-PHYTOSOME', W9, 333, 7799, 7466, '8/22–8/28 일반세일즈');
   H('MY-BERB-ALPHA', W9, 804, 1055, 251, '8/22–8/28 약사임당 공구');
   H('MY-BERB-ALPHA', W9, 2, 251, 249, '8/22–8/28 재배송');
@@ -605,7 +614,7 @@ function seed() {
   HI('MY-MAGUP', W9, 4607, 0, 4607, '8/22–8/28 입고');
   const W10 = new Date('2026-09-04T18:00:00').getTime();  // 8/31–9/4
   H('YDY-PHYTOSOME', W10, 2166, 7466, 5300, '8/31–9/4 스마트스토어 판매(공구2010·일반156)');
-  H('YDY-BQ10', W10, 542, 8671, 8129, '8/31–9/4 스마트스토어 판매(공구489·일반53)');
+  H('YDY-BQ10', W10, 503, 7600, 7097, '8/31–9/4 스마트스토어 판매(공구450·일반53)');
   H('MY-VS-PRIME', W10, 17, 7249, 7232, '8/31–9/4 스마트스토어 판매');
   H('MY-VS-PRIME', W10, 9, 7232, 7223, '8/31–9/4 11번가 판매');
   H('YDY-MAGDUO-K2', W10, 16, 5594, 5578, '8/31–9/4 스마트스토어 판매');
@@ -617,9 +626,9 @@ function seed() {
   H('YDY-PHYTOSOME', W11, 328, 5300, 4972, '9/7–9/11 스마트스토어 판매(공구327·일반1)');
   H('YDY-PHYTOSOME', W11, 576, 4972, 4396, '9/1 아이허브 #0102·0103 (지연 반영)');
   H('YDY-PHYTOSOME', W11, 528, 4396, 3868, '9/7–9/11 아이허브 #0105·0106');
-  H('YDY-BQ10', W11, 342, 8129, 7787, '9/7–9/11 스마트스토어 판매(공구282·일반60)');
-  H('YDY-BQ10', W11, 648, 7787, 7139, '9/1 아이허브 #0102 (지연 반영)');
-  H('YDY-BQ10', W11, 504, 7139, 6635, '9/7–9/11 아이허브 #0105');
+  H('YDY-BQ10', W11, 352, 7097, 6745, '9/7–9/11 스마트스토어 판매(공구282·일반70)');
+  H('YDY-BQ10', W11, 648, 6745, 6097, '9/1 아이허브 #0102 (지연 반영)');
+  H('YDY-BQ10', W11, 504, 6097, 5593, '9/7–9/11 아이허브 #0105');
   H('YDY-MAGDUO-K2', W11, 5, 5578, 5573, '9/7–9/11 스마트스토어 판매');
   H('YDY-MAGDUO-K2', W11, 480, 5573, 5093, '9/1 아이허브 #0102·0103 (지연 반영)');
   H('YDY-MAGDUO-K2', W11, 264, 5093, 4829, '9/7–9/11 아이허브 #0105');
@@ -629,8 +638,21 @@ function seed() {
   H('MY-VS-PRIME', W11, 12, 7223, 7211, '9/7–9/11 스마트스토어 판매(공구6·일반6)');
   H('YDY-NAD', W11, 3, 7703, 7700, '9/7–9/11 스마트스토어 판매');
   H('YDY-CIRCU', W11, 1, 6076, 6075, '9/7–9/11 스마트스토어 판매');
+  const W12 = new Date('2026-09-18T18:00:00').getTime();  // 9/14–9/18 (주말 9/12–9/13 주문 포함)
+  H('YDY-PHYTOSOME', W12, 471, 3868, 3397, '9/14–9/18 스마트스토어 공구 판매(약사피셜)');
+  H('YDY-PHYTOSOME', W12, 480, 3397, 2917, '9/14–9/18 아이허브 #0108');
+  H('YDY-BQ10', W12, 185, 5593, 5408, '9/14–9/18 스마트스토어 판매(공구135·일반50)');
+  H('YDY-MAGDUO-K2', W12, 149, 4829, 4680, '9/14–9/18 스마트스토어 판매(공구147·일반2)');
+  H('YDY-MAGDUO-K2', W12, 48, 4680, 4632, '9/14–9/18 아이허브 #0107');
+  H('YDY-LIVER-DEX', W12, 60, 4331, 4271, '9/14–9/18 스마트스토어 공구 판매(몸짱제니약사48·형제약사12)');
+  H('YDY-NAD', W12, 24, 7700, 7676, '9/14–9/18 아이허브 #0108');
+  H('YDY-CIRCU', W12, 1, 6075, 6074, '9/14–9/18 스마트스토어 판매');
+  H('MY-VS-PRIME', W12, 14, 7211, 7197, '9/14–9/18 스마트스토어 판매');
+  H('MY-VS-PRIME', W12, 6, 7197, 7191, '9/14–9/18 11번가 판매');
+  H('MY-VS-PRIME', W12, 1, 7191, 7190, '9/14–9/18 쿠팡 판매');
   history.sort((a,b) => b.ts - a.ts);  // 최신순
   save(); saveHistory();
+  try { localStorage.setItem(KEY + '_build', BUILD); } catch(e){}
 }
 function uid() { return Math.random().toString(36).slice(2, 9); }
 function won(n) { return '₩' + Math.round(n).toLocaleString('ko-KR'); }
