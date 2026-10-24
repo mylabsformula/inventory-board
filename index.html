@@ -1,3 +1,4 @@
+<!-- 2026-10-23: 10월4주차(10/17–10/23) 파이토좀 입고 +65,466, 스마트스토어 판매(몸짱제니약사 파이토좀·위키약사 베르베린 MS·하유약사 베르베린 알파 공구, 10/17 새벽 이월·10/18 무통장 포함) + 쿠팡 1건 + 아이허브 #0113–#0116 + 3주차 누락분(릴리 리버덱스 6개묶음 1) 반영, 저장키 v33 + BUILD 20261023-01 재시드 -->
 <!-- 2026-10-17: 10월3주차(10/10–10/16) 스마트스토어 판매(몸짱제니약사 파이토좀·릴리 리버덱스·형제약사 BQ10 공구, 10/10 새벽 이월 4건·10/7 무통장 입금확인 1건 포함) + 쿠팡 2건 + 2주차 누락분(Mylabs_1 VS 3pk 2건·쿠팡 VS 3pk 1건) 반영, 아이허브 신규 인보이스 없음, 저장키 v32 + BUILD 20261017-01 재시드 -->
 <!-- 2026-10-09: Liver-Dex 원가 $24.99→$18.99, 저장키 v31 + BUILD 20261009-02 재시드 -->
 <!-- 2026-10-09: 10월2주차(10/3–10/9) 스마트스토어 판매(김미성약사 파이토좀·릴리 리버덱스·형제약사 BQ10 공구 포함) + 아이허브 #0111·#0112 반영, 저장키 v30 + BUILD 20261009-01 재시드 -->
@@ -443,10 +444,10 @@
 
 <script src="./재고 관리 보드_files/xlsx.full.min.js.download"></script>
 <script>
-const KEY = 'inventory_board_v32';
+const KEY = 'inventory_board_v33';
 // 파일 내용이 바뀔 때마다 갱신. 저장된 스탬프와 다르면 무조건 재시드하므로
 // 같은 저장키로 파일을 다시 배포해도 옛 데이터가 남지 않음.
-const BUILD = '20261017-01';
+const BUILD = '20261023-01';
 const HKEY = 'inventory_history_v1';
 const AKEY = 'inventory_applied_orders_v1';
 let items = [];
@@ -472,15 +473,15 @@ function seed() {
   // 원가 = COST_TABLE 단위원가(USD), 제품 원가만 (배송비 제외)
   const P = (name, sku, brand, stock, cost) => ({ id: uid(), name, sku, brand, category: 'Supplement', stock, safety: 0, price: 0, cost });
   items = [
-    P('Berberine Phytosome with R-lipoic Acid', 'YDY-PHYTOSOME', 'YDY', 444, 15.99),
-    P('All Active BQ10 with Quatrefolic®', 'YDY-BQ10', 'YDY', 6409, 16.49),
-    P('Chelated Magnesium with K2', 'YDY-MAGDUO-K2', 'YDY', 4344, 9.99),
-    P('NAD+ Tri-complex', 'YDY-NAD', 'YDY', 7428, 17.99),
+    P('Berberine Phytosome with R-lipoic Acid', 'YDY-PHYTOSOME', 'YDY', 64376, 15.99),
+    P('All Active BQ10 with Quatrefolic®', 'YDY-BQ10', 'YDY', 5634, 16.49),
+    P('Chelated Magnesium with K2', 'YDY-MAGDUO-K2', 'YDY', 4265, 9.99),
+    P('NAD+ Tri-complex', 'YDY-NAD', 'YDY', 7371, 17.99),
     P('Circu-Pycnogenol®', 'YDY-CIRCU', 'YDY', 6041, 22.99),
-    P('Liver-Dex', 'YDY-LIVER-DEX', 'YDY', 3326, 18.99),
-    P('Berberine Alpha', 'MY-BERB-ALPHA', 'Mylabs', 61, 8.46),
-    P('Berberine MS', 'MY-BERB-MS', 'Mylabs', 4663, 11.8),
-    P('VS Formula Prime', 'MY-VS-PRIME', 'Mylabs', 7072, 5.19),
+    P('Liver-Dex', 'YDY-LIVER-DEX', 'YDY', 3294, 18.99),
+    P('Berberine Alpha', 'MY-BERB-ALPHA', 'Mylabs', 58, 8.46),
+    P('Berberine MS', 'MY-BERB-MS', 'Mylabs', 4255, 11.8),
+    P('VS Formula Prime', 'MY-VS-PRIME', 'Mylabs', 7058, 5.19),
     P('Mag Up', 'MY-MAGUP', 'Mylabs', 2737, 5.9),
   ];
   // ── 주별 출고 이력 백필 (재고 변경과 함께 자동 기록) ──
@@ -712,6 +713,29 @@ function seed() {
   H('MY-VS-PRIME', W17, 11, 7095, 7084, '10/10–10/16 스마트스토어 판매(1pk 11)');
   H('MY-VS-PRIME', W17, 3, 7084, 7081, '10/13·10/16 쿠팡 판매(2pk 1·1pk 1)');
   H('MY-VS-PRIME', W17, 9, 7081, 7072, '2주차 누락분: 10/7·10/8 스마트스토어(Mylabs_1) 3pk 2 + 10/9 쿠팡 3pk 1');
+  const W18 = new Date('2026-10-23T18:00:00').getTime();  // 10월 4주차 10/17–10/23 (10/24 00:25 리버덱스 1pk는 다음 주차)
+  HI('YDY-PHYTOSOME', W18, 65466, 444, 65910, '10월 4주차 입고');
+  H('YDY-PHYTOSOME', W18, 192, 65910, 65718, '10/17–10/23 스마트스토어 공구 판매(몸짱제니약사: 3개묶음 20·6개묶음 22, 10/18 무통장 1건 포함)');
+  H('YDY-PHYTOSOME', W18, 166, 65718, 65552, '10/17–10/23 스마트스토어 판매(1pk 6·2pk 14·3pk 44, 10/17 01:40 이월 1건 포함)');
+  H('YDY-PHYTOSOME', W18, 336, 65552, 65216, '10/19 아이허브 #0113');
+  H('YDY-PHYTOSOME', W18, 360, 65216, 64856, '10/19 아이허브 #0114');
+  H('YDY-PHYTOSOME', W18, 480, 64856, 64376, '10/22 아이허브 #0115');
+  H('YDY-BQ10', W18, 55, 6409, 6354, '10/17–10/23 스마트스토어 판매(1pk 14·2pk 4·3pk 11)');
+  H('YDY-BQ10', W18, 288, 6354, 6066, '10/19 아이허브 #0113');
+  H('YDY-BQ10', W18, 432, 6066, 5634, '10/22 아이허브 #0116');
+  H('YDY-LIVER-DEX', W18, 6, 3326, 3320, '3주차 누락분: 10/16 23:56 릴리약사 공구 6개묶음 1');
+  H('YDY-LIVER-DEX', W18, 26, 3320, 3294, '10/17–10/23 스마트스토어 판매(1pk 9·2pk 7·3pk 1)');
+  H('YDY-MAGDUO-K2', W18, 7, 4344, 4337, '10/17–10/23 스마트스토어 판매(1pk 2·2pk 1·3pk 1)');
+  H('YDY-MAGDUO-K2', W18, 72, 4337, 4265, '10/22 아이허브 #0116');
+  H('YDY-NAD', W18, 9, 7428, 7419, '10/17–10/23 스마트스토어 판매(1pk 1·2pk 1·3pk 2)');
+  H('YDY-NAD', W18, 24, 7419, 7395, '10/19 아이허브 #0114');
+  H('YDY-NAD', W18, 24, 7395, 7371, '10/22 아이허브 #0116');
+  H('MY-BERB-MS', W18, 168, 4663, 4495, '10/17–10/23 스마트스토어 공구 판매(위키약사: 3개묶음 24·6개묶음 16)');
+  H('MY-BERB-MS', W18, 96, 4495, 4399, '10/19 아이허브 #0113');
+  H('MY-BERB-MS', W18, 144, 4399, 4255, '10/19 아이허브 #0114');
+  H('MY-BERB-ALPHA', W18, 3, 61, 58, '10/20 스마트스토어 공구 판매(하유약사: 3개묶음 1)');
+  H('MY-VS-PRIME', W18, 12, 7072, 7060, '10/17–10/23 스마트스토어 판매(1pk 9·Mylabs_1 3pk 1)');
+  H('MY-VS-PRIME', W18, 2, 7060, 7058, '10/18 쿠팡 판매(2pk 1)');
   history.sort((a,b) => b.ts - a.ts);  // 최신순
   save(); saveHistory();
   try { localStorage.setItem(KEY + '_build', BUILD); } catch(e){}
