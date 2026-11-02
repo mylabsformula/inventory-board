@@ -1,3 +1,4 @@
+<!-- 2026-11-01: 10월5주차(10/24–10/30) 스마트스토어 판매(고약사(약들약) 파이토좀 공구 3개묶음 1,301·6개묶음 838, 형제약사 마그네슘 K2 공구, 하유약사 베르베린 MS 공구 1건, 10/24 00:25 리버덱스 이월 포함) + 쿠팡 1건 반영, 아이허브 신규 인보이스 없음, 저장키 v34 + BUILD 20261101-01 재시드 -->
 <!-- 2026-10-23: 10월4주차(10/17–10/23) 파이토좀 입고 +65,466, 스마트스토어 판매(몸짱제니약사 파이토좀·위키약사 베르베린 MS·하유약사 베르베린 알파 공구, 10/17 새벽 이월·10/18 무통장 포함) + 쿠팡 1건 + 아이허브 #0113–#0116 + 3주차 누락분(릴리 리버덱스 6개묶음 1) 반영, 저장키 v33 + BUILD 20261023-01 재시드 -->
 <!-- 2026-10-17: 10월3주차(10/10–10/16) 스마트스토어 판매(몸짱제니약사 파이토좀·릴리 리버덱스·형제약사 BQ10 공구, 10/10 새벽 이월 4건·10/7 무통장 입금확인 1건 포함) + 쿠팡 2건 + 2주차 누락분(Mylabs_1 VS 3pk 2건·쿠팡 VS 3pk 1건) 반영, 아이허브 신규 인보이스 없음, 저장키 v32 + BUILD 20261017-01 재시드 -->
 <!-- 2026-10-09: Liver-Dex 원가 $24.99→$18.99, 저장키 v31 + BUILD 20261009-02 재시드 -->
@@ -444,10 +445,10 @@
 
 <script src="./재고 관리 보드_files/xlsx.full.min.js.download"></script>
 <script>
-const KEY = 'inventory_board_v33';
+const KEY = 'inventory_board_v34';
 // 파일 내용이 바뀔 때마다 갱신. 저장된 스탬프와 다르면 무조건 재시드하므로
 // 같은 저장키로 파일을 다시 배포해도 옛 데이터가 남지 않음.
-const BUILD = '20261023-01';
+const BUILD = '20261101-01';
 const HKEY = 'inventory_history_v1';
 const AKEY = 'inventory_applied_orders_v1';
 let items = [];
@@ -473,15 +474,15 @@ function seed() {
   // 원가 = COST_TABLE 단위원가(USD), 제품 원가만 (배송비 제외)
   const P = (name, sku, brand, stock, cost) => ({ id: uid(), name, sku, brand, category: 'Supplement', stock, safety: 0, price: 0, cost });
   items = [
-    P('Berberine Phytosome with R-lipoic Acid', 'YDY-PHYTOSOME', 'YDY', 64376, 15.99),
-    P('All Active BQ10 with Quatrefolic®', 'YDY-BQ10', 'YDY', 5634, 16.49),
-    P('Chelated Magnesium with K2', 'YDY-MAGDUO-K2', 'YDY', 4265, 9.99),
-    P('NAD+ Tri-complex', 'YDY-NAD', 'YDY', 7371, 17.99),
-    P('Circu-Pycnogenol®', 'YDY-CIRCU', 'YDY', 6041, 22.99),
-    P('Liver-Dex', 'YDY-LIVER-DEX', 'YDY', 3294, 18.99),
+    P('Berberine Phytosome with R-lipoic Acid', 'YDY-PHYTOSOME', 'YDY', 55199, 15.99),
+    P('All Active BQ10 with Quatrefolic®', 'YDY-BQ10', 'YDY', 5588, 16.49),
+    P('Chelated Magnesium with K2', 'YDY-MAGDUO-K2', 'YDY', 4195, 9.99),
+    P('NAD+ Tri-complex', 'YDY-NAD', 'YDY', 7357, 17.99),
+    P('Circu-Pycnogenol®', 'YDY-CIRCU', 'YDY', 6038, 22.99),
+    P('Liver-Dex', 'YDY-LIVER-DEX', 'YDY', 3261, 18.99),
     P('Berberine Alpha', 'MY-BERB-ALPHA', 'Mylabs', 58, 8.46),
-    P('Berberine MS', 'MY-BERB-MS', 'Mylabs', 4255, 11.8),
-    P('VS Formula Prime', 'MY-VS-PRIME', 'Mylabs', 7058, 5.19),
+    P('Berberine MS', 'MY-BERB-MS', 'Mylabs', 4247, 11.8),
+    P('VS Formula Prime', 'MY-VS-PRIME', 'Mylabs', 7053, 5.19),
     P('Mag Up', 'MY-MAGUP', 'Mylabs', 2737, 5.9),
   ];
   // ── 주별 출고 이력 백필 (재고 변경과 함께 자동 기록) ──
@@ -736,6 +737,19 @@ function seed() {
   H('MY-BERB-ALPHA', W18, 3, 61, 58, '10/20 스마트스토어 공구 판매(하유약사: 3개묶음 1)');
   H('MY-VS-PRIME', W18, 12, 7072, 7060, '10/17–10/23 스마트스토어 판매(1pk 9·Mylabs_1 3pk 1)');
   H('MY-VS-PRIME', W18, 2, 7060, 7058, '10/18 쿠팡 판매(2pk 1)');
+  const W19 = new Date('2026-10-30T18:00:00').getTime();  // 10월 5주차 10/24–10/30
+  H('YDY-PHYTOSOME', W19, 8931, 64376, 55445, '10/24–10/30 스마트스토어 공구 판매(고약사(약들약): 3개묶음 1,301·6개묶음 838)');
+  H('YDY-PHYTOSOME', W19, 246, 55445, 55199, '10/24–10/30 스마트스토어 판매(1pk 29·2pk 38·3pk 47)');
+  H('YDY-BQ10', W19, 46, 5634, 5588, '10/24–10/30 스마트스토어 판매(1pk 16·2pk 6·3pk 6)');
+  H('YDY-LIVER-DEX', W19, 33, 3294, 3261, '10/24–10/30 스마트스토어 판매(1pk 10·2pk 7·3pk 3, 10/24 00:25 이월 1건 포함)');
+  H('YDY-MAGDUO-K2', W19, 51, 4265, 4214, '10/24–10/30 스마트스토어 공구 판매(형제약사: 3개묶음 5·6개묶음 6)');
+  H('YDY-MAGDUO-K2', W19, 19, 4214, 4195, '10/24–10/30 스마트스토어 판매(1pk 1·3pk 6)');
+  H('YDY-NAD', W19, 14, 7371, 7357, '10/24–10/30 스마트스토어 판매(1pk 2·2pk 3·3pk 2)');
+  H('YDY-CIRCU', W19, 3, 6041, 6038, '10/24–10/30 스마트스토어 판매(1pk 1·2pk 1)');
+  H('MY-BERB-MS', W19, 6, 4255, 4249, '10/28 스마트스토어 공구 판매(하유약사: 6개묶음 1)');
+  H('MY-BERB-MS', W19, 2, 4249, 4247, '10/27 스마트스토어 판매(1pk 2)');
+  H('MY-VS-PRIME', W19, 3, 7058, 7055, '10/28 스마트스토어 판매(3pk 1)');
+  H('MY-VS-PRIME', W19, 2, 7055, 7053, '10/25 쿠팡 판매(2pk 1)');
   history.sort((a,b) => b.ts - a.ts);  // 최신순
   save(); saveHistory();
   try { localStorage.setItem(KEY + '_build', BUILD); } catch(e){}
