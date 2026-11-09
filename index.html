@@ -1,3 +1,4 @@
+<!-- 2026-11-08: 10월5주차 고약사 6개묶음 누락 791건 재정산 → 파이토좀 −4,746 (51,830→47,084), 저장키 v38 + BUILD 20261108-04 재시드 -->
 <!-- 2026-11-08: 리버덱스 New 입고 +22,080 (11/06 실사표 920박스×24) 반영 → 24,833, 저장키 v37 + BUILD 20261108-03 재시드 -->
 <!-- 2026-11-08: 11월1주차 보정 — 110426 스마트스토어 주문(11/04, 54건) + 아이허브 #0117·#0118 추가, 저장키 v36 + BUILD 20261108-02 재시드 -->
 <!-- 2026-11-08: 11월1주차(10/31–11/6) 스마트스토어 판매(고약사(약들약) 파이토좀·약사임당 리버덱스·드림약사 VS·형제약사 K2 공구) + 쿠팡 1건 + 11번가 1건 + 아이허브 #0119·#0120 + 10월5주차 누락분(10/30 23:10 이후·10/29 무통장) 반영, 11/04 주문파일 없음(미반영), 저장키 v35 + BUILD 20261108-01 재시드 -->
@@ -448,10 +449,10 @@
 
 <script src="./재고 관리 보드_files/xlsx.full.min.js.download"></script>
 <script>
-const KEY = 'inventory_board_v37';
+const KEY = 'inventory_board_v38';
 // 파일 내용이 바뀔 때마다 갱신. 저장된 스탬프와 다르면 무조건 재시드하므로
 // 같은 저장키로 파일을 다시 배포해도 옛 데이터가 남지 않음.
-const BUILD = '20261108-03';
+const BUILD = '20261108-04';
 const HKEY = 'inventory_history_v1';
 const AKEY = 'inventory_applied_orders_v1';
 let items = [];
@@ -477,7 +478,7 @@ function seed() {
   // 원가 = COST_TABLE 단위원가(USD), 제품 원가만 (배송비 제외)
   const P = (name, sku, brand, stock, cost) => ({ id: uid(), name, sku, brand, category: 'Supplement', stock, safety: 0, price: 0, cost });
   items = [
-    P('Berberine Phytosome with R-lipoic Acid', 'YDY-PHYTOSOME', 'YDY', 51830, 15.99),
+    P('Berberine Phytosome with R-lipoic Acid', 'YDY-PHYTOSOME', 'YDY', 47084, 15.99),
     P('All Active BQ10 with Quatrefolic®', 'YDY-BQ10', 'YDY', 4951, 16.49),
     P('Chelated Magnesium with K2', 'YDY-MAGDUO-K2', 'YDY', 4095, 9.99),
     P('NAD+ Tri-complex', 'YDY-NAD', 'YDY', 7140, 17.99),
@@ -760,6 +761,7 @@ function seed() {
   H('YDY-PHYTOSOME', W20, 380, 53770, 53390, '10/31–11/6 스마트스토어 판매(1pk 31·2pk 41·3pk 89)');
   H('YDY-PHYTOSOME', W20, 840, 53390, 52550, '11/02 아이허브 #0117');
   H('YDY-PHYTOSOME', W20, 720, 52550, 51830, '11/08 아이허브 #0120');
+  H('YDY-PHYTOSOME', W20, 4746, 51830, 47084, '10월5주차 누락분 재정산: 고약사(약들약) 공구 6개묶음 791건(10/24–10/30, 102626 파일 11/3 갱신분) × 6병');
   H('YDY-BQ10', W20, 37, 5588, 5551, '10/31–11/6 스마트스토어 판매(1pk 10·2pk 6·3pk 5)');
   H('YDY-BQ10', W20, 72, 5551, 5479, '11/02 아이허브 #0117');
   H('YDY-BQ10', W20, 48, 5479, 5431, '11/02 아이허브 #0118');
